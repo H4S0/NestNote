@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { ReactNode } from "react";
 import DashboardItems from "../components/dashboard/DashboardItems";
-import { DollarSign, Globe, HeartOff, Home } from "lucide-react";
+import { CircleUser, DollarSign, Globe, HeartOff, Home } from "lucide-react";
 import { ThemeToggle } from "../components/dashboard/ThemeToggle";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export const navLinks = [
   {
@@ -44,6 +46,19 @@ export default function DashboardLayout({children} : {children: ReactNode}){
         <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
           <div className="ml-auto flex items-center gap-x-5">
             <ThemeToggle/>
+          
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant='secondary' size='icon' className="rounded-full">
+                    <CircleUser className="h-5 w-5"/>
+                  </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
       </div>
