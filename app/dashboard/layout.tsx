@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import DashboardItems from "../components/dashboard/DashboardItems";
 import { CircleUser, DollarSign, Globe, HeartOff, Home } from "lucide-react";
 import { ThemeToggle } from "../components/dashboard/ThemeToggle";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
 
 export const navLinks = [
