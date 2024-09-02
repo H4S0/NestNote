@@ -5,7 +5,7 @@ import { CircleUser, DollarSign, Globe, HeartOff, Home } from "lucide-react";
 import { ThemeToggle } from "../components/dashboard/ThemeToggle";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
-
+import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 export const navLinks = [
   {
     name: 'Dashboard',
@@ -55,7 +55,7 @@ export default function DashboardLayout({children} : {children: ReactNode}){
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>
-                  Log out
+                  <LogoutLink>Logout</LogoutLink>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
