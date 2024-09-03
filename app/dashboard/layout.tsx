@@ -6,7 +6,8 @@ import { ThemeToggle } from "../components/dashboard/ThemeToggle";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-export const navLinks = [
+
+export const navLinks: {name: string, href: string, icon: any}[] = [
   {
     name: 'Dashboard',
     href: '/dashboard',
