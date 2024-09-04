@@ -21,5 +21,11 @@ export async function CreateSiteAction(formData: FormData){
     return submission.reply()
   }
 
-  const response = await prisma.site
+  const response = await prisma.site.create({
+    data: {
+      description: submission.value.description,
+      name: submission.value.name,
+      subdirectory: submission.value.subdirectory
+    }
+  })
 }

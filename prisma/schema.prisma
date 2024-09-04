@@ -22,6 +22,8 @@ model User {
   profileImage String
 
   createdAt DateTime @default(now())
+
+  Site Site[]
 }
 
 model Site {
@@ -33,4 +35,6 @@ model Site {
   updatedAt    DateTime @updatedAt
 
   imageUrl String?
+  User     User?   @relation(fields: [userId], references: [id])
+  userId   String?
 }
