@@ -1,10 +1,12 @@
+'use server'
+
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import { parseWithZod } from '@conform-to/zod'
 import { siteSchema } from "./utils/zodSchemas";
 import prisma from "./utils/db";
 
-export async function CreateSiteAction(formData: FormData){
+export async function CreateSiteAction(prevState: any, formData: FormData){
   const {getUser} = getKindeServerSession()
 
   const user = getUser()
@@ -25,7 +27,10 @@ export async function CreateSiteAction(formData: FormData){
     data: {
       description: submission.value.description,
       name: submission.value.name,
-      subdirectory: submission.value.subdirectory
+      subdirectory: submission.value.subdirectory,
+      userId: (await user).id,
     }
   })
+
+  return redirect('/dashboard/sites')
 }
