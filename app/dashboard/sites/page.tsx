@@ -47,7 +47,7 @@ const SitesRoute = async () => {
         </Button>
       </div>
 
-      {data === undefined || data.length === '' ? (
+      {data === undefined || data.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center animate-in fade-in-50">
           <div className="flex size-20 items-center justify-center rounded-full bg-primary/30">
             <FileIcon className="size-10 text-primary" />
