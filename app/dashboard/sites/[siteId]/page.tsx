@@ -36,7 +36,7 @@ export default async function SiteIdRoute({
     return redirect('/api/auth/login');
   }
 
-  const data = await getData(user.id, params.siteId);
+  const data = await getData((await user).id, params.siteId);
   return (
     <>
       <div className="flex w-full justify-end gap-x-4">

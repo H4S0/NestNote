@@ -1,3 +1,5 @@
+'use server';
+
 import { Button } from '@/components/ui/button';
 import React from 'react';
 import Link from 'next/link';
@@ -71,6 +73,7 @@ const SitesRoute = async () => {
           {data.map((item) => (
             <Card key={item.id}>
               <Image
+                priority
                 src={item.imageUrl ?? DefaultImage}
                 alt={item.name}
                 width={400}
