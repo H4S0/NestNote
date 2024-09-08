@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { FileIcon, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import {
   Card,
   CardDescription,
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/card';
 import Image from 'next/image';
 import DefaultImage from '@/public/default.png';
+import Loading from '@/app/components/loading';
 
 interface Site {
   id: string;
@@ -21,49 +22,56 @@ interface Site {
   subdirectory: string;
   createdAt: Date;
   updatedAt: Date;
-  imageUrl?: string | null;
+  imageUrl?: string | null; // Allow both null and undefined
   userId: string | null;
 }
 
-interface SitesClientProps {
-  data: Site[];
-}
+const SitesClient = () => {
+  const [data, setData] = useState<Site[] | null>(null);
+  const [loading, setLoading] = useState(true);
 
-const SitesClient: React.FC<SitesClientProps> = ({ data }) => {
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch('/api/sites'); // Fetch data from the API route
+      const sites = await res.json();
+      setData(sites);
+      setLoading(false);
+    };
 
-  const handleViewClick = (siteId: string) => {
-    setLoading(true);
-    router.push(`/dashboard/sites/${siteId}`);
-  };
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <>
-      {loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-white/75">
-          <div
-            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full"
-            role="status"
-          >
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      )}
-
       <div className="flex w-full justify-end">
         <Button asChild>
-          <Link href={'/dashboard/sites/new'}>Create Site</Link>
+          <Link href={'/dashboard/sites/new'}>
+            <PlusCircle className="mr-4 size-4" /> Create Site
+          </Link>
         </Button>
       </div>
 
-      {data.length === 0 ? (
+      {data === null || data.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
+          <div className="flex size-20 items-center justify-center rounded-full bg-primary/30">
+            <FileIcon className="size-10 text-primary" />
+          </div>
           <h2 className="mt-6 text-xl font-semibold">
             You don’t have any Sites created
           </h2>
+          <p className="mb-8 mt-2 text-center text-sm leading-2 text-muted-foreground max-w-sm mx-auto">
+            You currently don’t have any Sites. Please create some so that you
+            can see them right here!
+          </p>
+
           <Button asChild>
-            <Link href={'/dashboard/sites/new'}>Create Site</Link>
+            <Link href={'/dashboard/sites/new'}>
+              <PlusCircle className="mr-4 size-4" /> Create Site
+            </Link>
           </Button>
         </div>
       ) : (
@@ -71,6 +79,7 @@ const SitesClient: React.FC<SitesClientProps> = ({ data }) => {
           {data.map((item) => (
             <Card key={item.id}>
               <Image
+                priority
                 src={item.imageUrl ?? DefaultImage}
                 alt={item.name}
                 width={400}
@@ -82,11 +91,10 @@ const SitesClient: React.FC<SitesClientProps> = ({ data }) => {
                 <CardDescription>{item.description}</CardDescription>
               </CardHeader>
               <CardFooter>
-                <Button
-                  className="w-full"
-                  onClick={() => handleViewClick(item.id)}
-                >
-                  View Articles
+                <Button className="w-full">
+                  <Link href={`/dashboard/sites/${item.id}`}>
+                    View Articles
+                  </Link>
                 </Button>
               </CardFooter>
             </Card>

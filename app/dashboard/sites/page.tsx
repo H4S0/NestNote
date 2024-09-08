@@ -1,7 +1,7 @@
-import SitesRoute from './SitesRoute';
+import SitesClient from './SitesClient';
 
-const SitesPage = async () => {
-  return <SitesRoute />;
+const SitesPage = () => {
+  return <SitesClient />;
 };
 
 export default SitesPage;

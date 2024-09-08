@@ -1,42 +1,59 @@
-import prisma from '@/app/utils/db';
+'use client';
+
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { Book, FileIcon, PlusCircle, Settings } from 'lucide-react';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
-async function getData(userId: string, siteId: string) {
-  const data = await prisma.post.findMany({
-    where: {
-      userId: userId,
-      siteId: siteId,
-    },
-    select: {
-      image: true,
-      title: true,
-      createdAt: true,
-      id: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
-  return data;
-}
-
-export default async function SiteIdRoute({
+export default function SiteIdRoute({
   params,
 }: {
   params: { siteId: string };
 }) {
-  const { getUser } = getKindeServerSession();
-  const user = getUser();
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [authenticated, setAuthenticated] = useState<boolean>(false);
+  const router = useRouter();
 
-  if (!user) {
-    return redirect('/api/auth/login');
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/api/sites/${params.siteId}`);
+        if (response.status === 401 || response.status === 500) {
+          router.push('/api/auth/login');
+          return;
+        }
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const result = await response.json();
+        setData(result);
+        setAuthenticated(true);
+      } catch (err: any) {
+        setError(err.message);
+        setAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [params.siteId, router]);
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
-  const data = await getData((await user).id, params.siteId);
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!authenticated) {
+    return null;
+  }
+
   return (
     <>
       <div className="flex w-full justify-end gap-x-4">
@@ -59,27 +76,35 @@ export default async function SiteIdRoute({
         </Button>
       </div>
 
-      {data === undefined || data.length === 0 ? (
+      {data.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center animate-in fade-in-50">
           <div className="flex size-20 items-center justify-center rounded-full bg-primary/30">
             <FileIcon className="size-10 text-primary" />
           </div>
           <h2 className="mt-6 text-xl font-semibold">
-            You dont have any Sites created
+            You don't have any posts created
           </h2>
           <p className="mb-8 mt-2 text-center text-sm leading-2 text-muted-foreground max-w-sm mx-auto">
-            You currently dont have any Sites. Please create some so that you
-            can see them right here!{' '}
+            You currently don’t have any posts. Please create some so that you
+            can see them right here!
           </p>
 
           <Button asChild>
             <Link href={'/dashboard/sites/new'}>
-              <PlusCircle className="mr-4 size-4" /> Create Site
+              <PlusCircle className="mr-4 size-4" /> Create Post
             </Link>
           </Button>
         </div>
       ) : (
-        <h1>sites</h1>
+        <div className="post-list">
+          {data.map((post) => (
+            <div key={post.id} className="post-item">
+              <h2>{post.title}</h2>
+              <img src={post.image} alt={post.title} />
+              <p>{new Date(post.createdAt).toLocaleDateString()}</p>
+            </div>
+          ))}
+        </div>
       )}
     </>
   );
