@@ -13,13 +13,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Atom, AtomIcon } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function ArticleCreating({
   params,
 }: {
   params: { siteId: string };
 }) {
+  const [imageUrl, setImageUrl] = useState<undefined | string>(undefined);
   return (
     <>
       <div className="flex items-center">
@@ -61,7 +64,22 @@ export default function ArticleCreating({
             </div>
             <div className="grid gap-2">
               <Label>Cover Image</Label>
-              <UploadDropzone endpoint="imageUploader" />
+              {imageUrl ? (
+                <Image
+                  src={imageUrl}
+                  alt="uploaded image"
+                  className="object-cover"
+                  width={200}
+                  height={200}
+                />
+              ) : (
+                <UploadDropzone
+                  onClientUploadComplete={(res) => {
+                    setImageUrl(res[0].url);
+                  }}
+                  endpoint="imageUploader"
+                />
+              )}
             </div>
           </form>
         </CardContent>
