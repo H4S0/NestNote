@@ -14,14 +14,14 @@ export default function SiteIdRoute({
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [authenticated, setAuthenticated] = useState<boolean>(false);
+
   const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(`/api/sites/${params.siteId}`);
-        if (response.status === 401 || response.status === 500) {
+        if (response.status === 401) {
           router.push('/api/auth/login');
           return;
         }
@@ -30,10 +30,8 @@ export default function SiteIdRoute({
         }
         const result = await response.json();
         setData(result);
-        setAuthenticated(true);
       } catch (err: any) {
         setError(err.message);
-        setAuthenticated(false);
       } finally {
         setLoading(false);
       }
@@ -48,10 +46,6 @@ export default function SiteIdRoute({
 
   if (error) {
     return <div>Error: {error}</div>;
-  }
-
-  if (!authenticated) {
-    return null;
   }
 
   return (

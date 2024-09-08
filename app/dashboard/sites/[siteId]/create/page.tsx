@@ -1,5 +1,6 @@
 'use client';
 
+import TailwindEditor from '@/app/components/dashboard/EditorWrapper';
 import { UploadDropzone } from '@/app/utils/UploadthingComponents';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ArrowLeft, Atom, AtomIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { JSONContent } from 'novel';
 import { useState } from 'react';
 
 export default function ArticleCreating({
@@ -23,6 +25,8 @@ export default function ArticleCreating({
   params: { siteId: string };
 }) {
   const [imageUrl, setImageUrl] = useState<undefined | string>(undefined);
+  const [value, setValue] = useState<JSONContent | undefined>(undefined);
+
   return (
     <>
       <div className="flex items-center">
@@ -84,6 +88,12 @@ export default function ArticleCreating({
                 />
               )}
             </div>
+            <div className="grid gap-2">
+              <Label>Article Content</Label>
+              <TailwindEditor onChange={setValue} initalValue={value} />
+            </div>
+
+            <Button className="w-fit">Submit</Button>
           </form>
         </CardContent>
       </Card>
