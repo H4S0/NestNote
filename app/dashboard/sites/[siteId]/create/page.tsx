@@ -68,7 +68,7 @@ export default function ArticleCreating({
                 <Image
                   src={imageUrl}
                   alt="uploaded image"
-                  className="object-cover"
+                  className="object-cover w-[200px] rounded-lg h-[200px]"
                   width={200}
                   height={200}
                 />
@@ -78,6 +78,9 @@ export default function ArticleCreating({
                     setImageUrl(res[0].url);
                   }}
                   endpoint="imageUploader"
+                  onUploadError={() => {
+                    throw new Error('something went wrong');
+                  }}
                 />
               )}
             </div>
