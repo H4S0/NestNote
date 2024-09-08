@@ -1,3 +1,6 @@
+'use client';
+
+import { UploadDropzone } from '@/app/utils/UploadthingComponents';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -55,6 +58,10 @@ export default function ArticleCreating({
                 placeholder="Small Descripiton four your article.."
                 className="h-32"
               />
+            </div>
+            <div className="grid gap-2">
+              <Label>Cover Image</Label>
+              <UploadDropzone endpoint="imageUploader" />
             </div>
           </form>
         </CardContent>
