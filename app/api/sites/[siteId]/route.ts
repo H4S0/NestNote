@@ -10,7 +10,7 @@ export async function GET(
   const user = await getUser();
 
   if (!user) {
-    return NextResponse.redirect('/api/auth/login'); // Redirect to login if not authenticated
+    return NextResponse.redirect('/api/auth/login');
   }
 
   const data = await prisma.post.findMany({
