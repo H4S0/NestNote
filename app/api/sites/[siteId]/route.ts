@@ -1,21 +1,17 @@
 import prisma from '@/app/utils/db';
 import { NextResponse } from 'next/server';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { requireUser } from '@/app/utils/requireUser';
 
 export async function GET(
   request: Request,
   { params }: { params: { siteId: string } }
 ) {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-
-  if (!user) {
-    return NextResponse.redirect('/api/auth/login');
-  }
+  const user = requireUser();
 
   const data = await prisma.post.findMany({
     where: {
-      userId: user.id,
+      userId: (await user).id,
       siteId: params.siteId,
     },
     select: {
