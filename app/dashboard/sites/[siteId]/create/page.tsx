@@ -1,7 +1,9 @@
 'use client';
 
+import { CreatePostAction } from '@/app/actions';
 import TailwindEditor from '@/app/components/dashboard/EditorWrapper';
 import { UploadDropzone } from '@/app/utils/UploadthingComponents';
+import { postSchema } from '@/app/utils/zodSchemas';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -13,11 +15,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useForm } from '@conform-to/react';
+import { parseWithZod } from '@conform-to/zod';
 import { ArrowLeft, Atom, AtomIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { JSONContent } from 'novel';
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
 
 export default function ArticleCreating({
   params,
@@ -26,6 +30,18 @@ export default function ArticleCreating({
 }) {
   const [imageUrl, setImageUrl] = useState<undefined | string>(undefined);
   const [value, setValue] = useState<JSONContent | undefined>(undefined);
+
+  const [lastResult, action] = useActionState(CreatePostAction, undefined);
+  const [form, fields] = useForm({
+    lastResult,
+    onValidate({ formData }) {
+      return parseWithZod(formData, {
+        schema: postSchema,
+      });
+    },
+    shouldValidate: 'onBlur',
+    shouldRevalidate: 'onInput',
+  });
 
   return (
     <>
