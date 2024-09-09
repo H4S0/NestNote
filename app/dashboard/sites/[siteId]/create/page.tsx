@@ -23,22 +23,21 @@ import Link from 'next/link';
 import { JSONContent } from 'novel';
 import { useActionState, useState } from 'react';
 
-export default function ArticleCreating({
+export default function ArticleCreationRoute({
   params,
 }: {
   params: { siteId: string };
 }) {
   const [imageUrl, setImageUrl] = useState<undefined | string>(undefined);
   const [value, setValue] = useState<JSONContent | undefined>(undefined);
-
   const [lastResult, action] = useActionState(CreatePostAction, undefined);
   const [form, fields] = useForm({
     lastResult,
+
     onValidate({ formData }) {
-      return parseWithZod(formData, {
-        schema: postSchema,
-      });
+      return parseWithZod(formData, { schema: postSchema });
     },
+
     shouldValidate: 'onBlur',
     shouldRevalidate: 'onInput',
   });
@@ -48,47 +47,80 @@ export default function ArticleCreating({
       <div className="flex items-center">
         <Button size="icon" variant="outline" className="mr-3" asChild>
           <Link href={`/dashboard/sites/${params.siteId}`}>
-            <ArrowLeft className="size-6" />
+            <ArrowLeft className="size-4" />
           </Link>
         </Button>
         <h1 className="text-xl font-semibold">Create Article</h1>
       </div>
+
       <Card>
         <CardHeader>
           <CardTitle>Article Details</CardTitle>
           <CardDescription>
-            Lorem ipsum dolor sit amet consectetur.
+            Lipsum dolor sit amet, consectetur adipiscing elit
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="flex flex-col gap-6">
+          <form
+            className="flex flex-col gap-6"
+            id={form.id}
+            onSubmit={form.onSubmit}
+            action={action}
+          >
+            <input type="hidden" name="siteId" value={params.siteId} />
             <div className="grid gap-2">
               <Label>Title</Label>
-              <Input placeholder="Blog" />
+              <Input
+                key={fields.title.key}
+                name={fields.title.name}
+                defaultValue={fields.title.initialValue}
+                placeholder="Nextjs blogging application"
+              />
+              <p className="text-red-500 text-sm">{fields.title.errors}</p>
             </div>
 
             <div className="grid gap-2">
               <Label>Slug</Label>
-              <Input placeholder="article slug" />
+              <Input
+                key={fields.slug.key}
+                name={fields.slug.name}
+                defaultValue={fields.slug.initialValue}
+                placeholder="Article Slug"
+              />
               <Button className="w-fit" variant="secondary" type="button">
-                <AtomIcon className="mr-2" /> Generate Slug
+                <Atom className="size-4 mr-2" /> Generate Slug
               </Button>
+              <p className="text-red-500 text-sm">{fields.slug.errors}</p>
             </div>
 
             <div className="grid gap-2">
               <Label>Small Description</Label>
               <Textarea
-                placeholder="Small Descripiton four your article.."
+                key={fields.smallDescripiton.key}
+                name={fields.smallDescripiton.name}
+                defaultValue={fields.smallDescripiton.initialValue}
+                placeholder="Small Description for your blog article..."
                 className="h-32"
               />
+              <p className="text-red-500 text-sm">
+                {fields.smallDescripiton.errors}
+              </p>
             </div>
+
             <div className="grid gap-2">
               <Label>Cover Image</Label>
+              <input
+                type="hidden"
+                name={fields.coverImage.name}
+                key={fields.coverImage.key}
+                defaultValue={fields.coverImage.initialValue}
+                value={imageUrl}
+              />
               {imageUrl ? (
                 <Image
                   src={imageUrl}
-                  alt="uploaded image"
-                  className="object-cover w-[200px] rounded-lg h-[200px]"
+                  alt="Uploaded Image"
+                  className="object-cover w-[200px] h-[200px] rounded-lg"
                   width={200}
                   height={200}
                 />
@@ -98,18 +130,28 @@ export default function ArticleCreating({
                     setImageUrl(res[0].url);
                   }}
                   endpoint="imageUploader"
-                  onUploadError={() => {
-                    throw new Error('something went wrong');
-                  }}
                 />
               )}
-            </div>
-            <div className="grid gap-2">
-              <Label>Article Content</Label>
-              <TailwindEditor onChange={setValue} initalValue={value} />
+
+              <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>
             </div>
 
-            <Button className="w-fit">Submit</Button>
+            <div className="grid gap-2">
+              <Label>Article Content</Label>
+              <input
+                type="hidden"
+                name={fields.articleContent.name}
+                key={fields.articleContent.key}
+                defaultValue={fields.articleContent.initialValue}
+                value={JSON.stringify(value)}
+              />
+              <TailwindEditor onChange={setValue} initalValue={value} />
+              <p className="text-red-500 text-sm">
+                {fields.articleContent.errors}
+              </p>
+            </div>
+
+            <Button type="submit">Create Article</Button>
           </form>
         </CardContent>
       </Card>
