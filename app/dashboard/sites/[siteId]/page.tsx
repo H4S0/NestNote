@@ -2,9 +2,24 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Book, FileIcon, PlusCircle, Settings } from 'lucide-react';
+import { Book, FileIcon, PlusCircle, Settings, Table } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import Image from 'next/image';
 
 export default function SiteIdRoute({
   params,
@@ -90,14 +105,47 @@ export default function SiteIdRoute({
           </Button>
         </div>
       ) : (
-        <div className="post-list">
-          {data.map((post) => (
-            <div key={post.id} className="post-item">
-              <h2>{post.title}</h2>
-              <img src={post.image} alt={post.title} />
-              <p>{new Date(post.createdAt).toLocaleDateString()}</p>
-            </div>
-          ))}
+        <div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Articles</CardTitle>
+              <CardDescription>
+                Managa your Articles in a simple interface
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Image</TableHead>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Created At</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {data.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <Image
+                          src={item.image}
+                          width={64}
+                          height={64}
+                          alt="Article Image"
+                          className="size-16 rounded-md object-cover"
+                        />
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {item.title}
+                      </TableCell>
+                      <TableCell>Published</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </div>
       )}
     </>
