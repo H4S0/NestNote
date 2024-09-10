@@ -23,6 +23,6 @@ export async function GET(
   if (!data) {
     return notFound();
   }
-  console.log(data);
+
   return NextResponse.json(data);
 }

@@ -1,5 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 
 export default function EditArticle({
   params,
@@ -24,5 +27,16 @@ export default function EditArticle({
     fetchData();
     console.log(data);
   }, [params.articleId, params.siteId]);
-  return <h1>test</h1>;
+  return (
+    <>
+      <div className="flex items-center">
+        <Button variant="outline" size="icon" className="mr-4">
+          <Link href={`/dashboard/sites/${params.siteId}`}>
+            <ArrowLeft />
+          </Link>
+        </Button>
+        <h1>Edit your Article</h1>
+      </div>
+    </>
+  );
 }
