@@ -109,40 +109,18 @@ export default function SiteIdRoute({
           <Card>
             <CardHeader>
               <CardTitle>Articles</CardTitle>
-              <CardDescription>
-                Managa your Articles in a simple interface
-              </CardDescription>
+              <CardDescription>Lorem, ipsum.</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Image</TableHead>
-                    <TableHead>Title</TableHead>
+                    <TableHead className="w-[100px]">Invoice</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Created At</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>Method</TableHead>
+                    <TableHead className="text-right">Amount</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
-                  {data.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell>
-                        <Image
-                          src={item.image}
-                          width={64}
-                          height={64}
-                          alt="Article Image"
-                          className="size-16 rounded-md object-cover"
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {item.title}
-                      </TableCell>
-                      <TableCell>Published</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
               </Table>
             </CardContent>
           </Card>

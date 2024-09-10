@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/app/utils/db';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { requireUser } from '@/app/utils/requireUser';
 
 export async function GET() {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
+  const user = requireUser();
 
   if (!user) {
     return NextResponse.redirect('/api/auth/login');
@@ -12,7 +12,7 @@ export async function GET() {
 
   const data = await prisma.site.findMany({
     where: {
-      userId: user.id,
+      userId: (await user).id,
     },
     orderBy: {
       createdAt: 'desc',
