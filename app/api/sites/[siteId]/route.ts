@@ -18,11 +18,14 @@ export async function GET(
       image: true,
       title: true,
       createdAt: true,
+      id: true,
     },
     orderBy: {
       createdAt: 'desc',
     },
   });
-  console.log(data);
+
   return NextResponse.json(data);
 }
+
+export async function UPDATE({ params }: { params: { siteId: string } }) {}

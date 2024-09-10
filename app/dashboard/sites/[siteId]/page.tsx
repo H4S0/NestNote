@@ -2,7 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Book, FileIcon, PlusCircle, Settings } from 'lucide-react';
+import {
+  Book,
+  FileIcon,
+  MoreHorizontal,
+  PlusCircle,
+  Settings,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -22,6 +28,14 @@ import {
 } from '@/components/ui/table';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export default function SiteIdRoute({
   params,
@@ -149,7 +163,28 @@ export default function SiteIdRoute({
                           Published
                         </Badge>
                       </TableCell>
-                      <TableCell>{item.createdAt}</TableCell>
+                      <TableCell>{item.createdAt.slice(0, 10)}</TableCell>
+                      <TableCell className="text-end">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger>
+                            <Button size="icon" variant="ghost">
+                              <MoreHorizontal className="size-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                              <Link
+                                href={`/dashboard/sites/${params.siteId}/${item.id}`}
+                              >
+                                Edit
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
