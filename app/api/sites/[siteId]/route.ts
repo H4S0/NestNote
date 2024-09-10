@@ -27,5 +27,3 @@ export async function GET(
 
   return NextResponse.json(data);
 }
-
-export async function UPDATE({ params }: { params: { siteId: string } }) {}
