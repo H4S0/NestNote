@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Book, FileIcon, PlusCircle, Settings, Table } from 'lucide-react';
+import { Book, FileIcon, PlusCircle, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -13,6 +13,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import {
+  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -20,6 +21,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import Image from 'next/image';
+import { Badge } from '@/components/ui/badge';
 
 export default function SiteIdRoute({
   params,
@@ -109,18 +111,48 @@ export default function SiteIdRoute({
           <Card>
             <CardHeader>
               <CardTitle>Articles</CardTitle>
-              <CardDescription>Lorem, ipsum.</CardDescription>
+              <CardDescription>
+                Manage your Articles in a simple and intuitive interface
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px]">Invoice</TableHead>
+                    <TableHead>Image</TableHead>
+                    <TableHead>Title</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Method</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
+                    <TableHead>Created At</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
+                <TableBody>
+                  {data.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <Image
+                          src={item.image}
+                          width={64}
+                          height={64}
+                          alt="Article Cover Image"
+                          className="size-16 rounded-md object-cover"
+                        />
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {item.title}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="outline"
+                          className="bg-green-500/10 text-green-500"
+                        >
+                          Published
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{item.createdAt}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
               </Table>
             </CardContent>
           </Card>
