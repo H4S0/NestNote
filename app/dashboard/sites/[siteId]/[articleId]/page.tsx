@@ -4,30 +4,42 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import EditForm from '@/app/components/EditForm';
-
+import Loading from '@/app/components/loading';
 export default function EditArticle({
   params,
 }: {
   params: { articleId: string; siteId: string };
 }) {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(
-        `/api/sites/${params.siteId}/${params.articleId}`
-      );
+      try {
+        const response = await fetch(
+          `/api/sites/${params.siteId}/${params.articleId}`
+        );
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+
+        const result = await response.json();
+        setData(result);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
-      const result = await response.json();
-      setData(result);
     };
 
     fetchData();
-    console.log(data);
   }, [params.articleId, params.siteId]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <>
       <div className="flex items-center">
@@ -38,7 +50,7 @@ export default function EditArticle({
         </Button>
         <h1>Edit your Article</h1>
       </div>
-      <EditForm params={params.siteId} />
+      {data && <EditForm data={data} />}
     </>
   );
 }

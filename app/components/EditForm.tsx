@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -6,99 +6,82 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import React from 'react';
-import TailwindEditor from './dashboard/EditorWrapper';
 import { Label } from '@/components/ui/label';
 import { UploadDropzone } from '../utils/UploadthingComponents';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Atom } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import Image from 'next/image';
-import { useState } from 'react';
 import { JSONContent } from 'novel';
-import { useActionState } from 'react';
-import { useForm } from '@conform-to/react';
-import { parseWithZod } from '@conform-to/zod';
-import { postSchema } from '../utils/zodSchemas';
-import { CreatePostAction } from '../actions';
+import TailwindEditor from './dashboard/EditorWrapper';
 
-const EditForm = ({ params }: { params: { siteId: string } }) => {
-  const [imageUrl, setImageUrl] = useState<undefined | string>(undefined);
-  const [value, setValue] = useState<JSONContent | undefined>(undefined);
-  const [lastResult, action] = useActionState(CreatePostAction, undefined);
-  const [form, fields] = useForm({
-    lastResult,
+interface EditableForm {
+  data: {
+    slug: string;
+    title: string;
+    smallDescripiton: string;
+    articleContent: any;
+    id: string;
+    image: string;
+  };
+}
 
-    onValidate({ formData }) {
-      return parseWithZod(formData, { schema: postSchema });
-    },
+const EditForm = ({ data }: EditableForm) => {
+  const [imageUrl, setImageUrl] = useState<string | undefined>(data.image);
+  const [value, setValue] = useState<JSONContent | undefined>(
+    data.articleContent
+  );
 
-    shouldValidate: 'onBlur',
-    shouldRevalidate: 'onInput',
-  });
+  useEffect(() => {
+    // Initialize form values if data is available
+    setImageUrl(data.image);
+    setValue(data.articleContent);
+  }, [data]);
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Article Details</CardTitle>
         <CardDescription>
-          Lipsum dolor sit amet, consectetur adipiscing elit
+          Edit your existing article details here
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form
-          className="flex flex-col gap-6"
-          id={form.id}
-          onSubmit={form.onSubmit}
-          action={action}
-        >
-          <input type="hidden" name="siteId" value={params.siteId} />
+        <form className="flex flex-col gap-6">
           <div className="grid gap-2">
             <Label>Title</Label>
             <Input
-              key={fields.title.key}
-              name={fields.title.name}
-              defaultValue={fields.title.initialValue}
+              name="title"
+              defaultValue={data.title} // Use data.title for default value
               placeholder="Nextjs blogging application"
             />
-            <p className="text-red-500 text-sm">{fields.title.errors}</p>
           </div>
 
           <div className="grid gap-2">
             <Label>Slug</Label>
             <Input
-              key={fields.slug.key}
-              name={fields.slug.name}
-              defaultValue={fields.slug.initialValue}
+              name="slug"
+              defaultValue={data.slug} // Use data.slug for default value
               placeholder="Article Slug"
             />
-            <Button className="w-fit" variant="secondary" type="button">
-              <Atom className="size-4 mr-2" /> Generate Slug
-            </Button>
-            <p className="text-red-500 text-sm">{fields.slug.errors}</p>
           </div>
 
           <div className="grid gap-2">
             <Label>Small Description</Label>
             <Textarea
-              key={fields.smallDescripiton.key}
-              name={fields.smallDescripiton.name}
-              defaultValue={fields.smallDescripiton.initialValue}
+              name="smallDescription"
+              defaultValue={data.smallDescripiton} // Use data.smallDescripiton
               placeholder="Small Description for your blog article..."
               className="h-32"
             />
-            <p className="text-red-500 text-sm">
-              {fields.smallDescripiton.errors}
-            </p>
           </div>
 
           <div className="grid gap-2">
             <Label>Cover Image</Label>
             <input
               type="hidden"
-              name={fields.coverImage.name}
-              key={fields.coverImage.key}
-              defaultValue={fields.coverImage.initialValue}
+              name="coverImage"
+              defaultValue={imageUrl}
               value={imageUrl}
             />
             {imageUrl ? (
@@ -117,26 +100,19 @@ const EditForm = ({ params }: { params: { siteId: string } }) => {
                 endpoint="imageUploader"
               />
             )}
-
-            <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>
           </div>
 
           <div className="grid gap-2">
             <Label>Article Content</Label>
             <input
               type="hidden"
-              name={fields.articleContent.name}
-              key={fields.articleContent.key}
-              defaultValue={fields.articleContent.initialValue}
-              value={JSON.stringify(value)}
+              name="articleContent"
+              value={JSON.stringify(value)} // Use value for the article content
             />
             <TailwindEditor onChange={setValue} initalValue={value} />
-            <p className="text-red-500 text-sm">
-              {fields.articleContent.errors}
-            </p>
           </div>
 
-          <Button type="submit">Create Article</Button>
+          <Button type="submit">Save Changes</Button>
         </form>
       </CardContent>
     </Card>
