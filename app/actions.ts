@@ -41,7 +41,7 @@ export async function CreatePostAction(prevState: any, formData: FormData) {
   if (submission.status !== 'success') {
     return submission.reply();
   }
-//TO-DO PREBACITI U API FOLDER POST CREATE METODU
+  //TO-DO PREBACITI U API FOLDER POST CREATE METODU
   const response = await prisma.post.create({
     data: {
       title: submission.value.title,
