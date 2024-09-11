@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import EditForm from '@/app/components/EditForm';
 
 export default function EditArticle({
   params,
@@ -37,6 +38,7 @@ export default function EditArticle({
         </Button>
         <h1>Edit your Article</h1>
       </div>
+      <EditForm params={params.siteId} />
     </>
   );
 }
