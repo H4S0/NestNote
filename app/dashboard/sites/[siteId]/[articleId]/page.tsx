@@ -20,13 +20,11 @@ export default function EditArticle({
         const response = await fetch(
           `/api/sites/${params.siteId}/${params.articleId}`
         );
-
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
-
         const result = await response.json();
-        console.log('Fetched article data:', result); // Add this line to log the fetched data
+        console.log('Fetched article data:', result); // Check the entire data structure
         setData(result);
       } catch (error) {
         console.error(error);

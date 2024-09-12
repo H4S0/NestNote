@@ -36,6 +36,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import Loading from '@/app/components/loading';
 
 export default function SiteIdRoute({
   params,
@@ -72,7 +73,7 @@ export default function SiteIdRoute({
   }, [params.siteId, router]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (error) {

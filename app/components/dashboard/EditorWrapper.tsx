@@ -18,13 +18,13 @@ interface EditorProps {
   onChange: (value: JSONContent) => void;
 }
 
-const extentsions = [...defaultExtensions, slashCommand];
+const extensions = [...defaultExtensions, slashCommand];
 
-const TailwindEditor = ({ initialValue, onChange }: EditorProps) => {
+const TailwindEditor = ({ onChange, initialValue }: EditorProps) => {
   return (
     <EditorRoot>
       <EditorContent
-        className="border p-4 rouned-lg min-h-64"
+        className="border p-4 rounded-lg min-h-64"
         editorProps={{
           handleDOMEvents: {
             keydown: (_view, event) => handleCommandNavigation(event),
@@ -33,7 +33,8 @@ const TailwindEditor = ({ initialValue, onChange }: EditorProps) => {
             class: `prose prose-lg dark:prose-invert prose-headings:font-title font-default focus:outline-none max-w-full`,
           },
         }}
-        extensions={extentsions}
+        immediatelyRender={false}
+        extensions={extensions}
         initialContent={initialValue}
         onUpdate={({ editor }) => {
           const json = editor.getJSON();

@@ -1,32 +1,34 @@
-import { useState } from 'react';
-import { JSONContent } from 'novel'; // Assuming this is the content type
-import { useForm } from '@conform-to/react';
-import { parseWithZod } from '@conform-to/zod';
-import { postSchema } from '../utils/zodSchemas';
-import TailwindEditor from './dashboard/EditorWrapper';
+'use client';
+
+import { UploadDropzone } from '@/app/utils/UploadthingComponents';
 import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { UploadDropzone } from '@/app/utils/UploadthingComponents';
-import Image from 'next/image';
 import { Atom } from 'lucide-react';
-import { useActionState } from 'react';
-import { EditPostAction } from '../actions';
+import Image from 'next/image';
+import TailwindEditor from './dashboard/EditorWrapper';
+import { useActionState, useState } from 'react';
+import { JSONContent } from 'novel';
+import { useForm } from '@conform-to/react';
+import { parseWithZod } from '@conform-to/zod';
+import { postSchema } from '@/app/utils/zodSchemas';
+import { CreatePostAction, EditPostAction } from '@/app/actions';
+import { unknown } from 'zod';
 
 interface iAppProps {
   data: {
     slug: string;
     title: string;
     smallDescription: string;
-    articleContent: JSONContent; // Explicitly define the JSONContent type
+    articleContent: JSONContent; // Assuming this should be JSONContent type
     id: string;
     image: string;
   };
@@ -34,19 +36,22 @@ interface iAppProps {
 }
 
 export function EditForm({ data, siteId }: iAppProps) {
-  const [imageUrl, setImageUrl] = useState<undefined | string>(data.image);
+  const [imageUrl, setImageUrl] = useState<string | undefined>(data.image);
   const [value, setValue] = useState<JSONContent | undefined>(
     data.articleContent
-  ); // JSONContent value for editor
-  const [slug, setSlugValue] = useState<string>(data.slug);
-  const [title, setTitle] = useState<string>(data.title);
+  );
+  const [slug, setSlugValue] = useState<string | undefined>(data.slug);
+  const [title, setTitle] = useState<string | undefined>(data.title);
 
+  // Initialize form handling
   const [lastResult, action] = useActionState(EditPostAction, undefined);
   const [form, fields] = useForm({
     lastResult,
+
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: postSchema });
     },
+
     shouldValidate: 'onBlur',
     shouldRevalidate: 'onInput',
   });
@@ -55,9 +60,7 @@ export function EditForm({ data, siteId }: iAppProps) {
     <Card className="mt-5">
       <CardHeader>
         <CardTitle>Article Details</CardTitle>
-        <CardDescription>
-          Lipsum dolor sit amet, consectetur adipiscing elit
-        </CardDescription>
+        <CardDescription>Provide details for the article.</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -66,26 +69,29 @@ export function EditForm({ data, siteId }: iAppProps) {
           onSubmit={form.onSubmit}
           action={action}
         >
+          {/* Hidden fields for article and site IDs */}
           <input type="hidden" name="articleId" value={data.id} />
           <input type="hidden" name="siteId" value={siteId} />
 
+          {/* Title Input */}
           <div className="grid gap-2">
-            <Label>Title</Label>
+            <Label htmlFor={fields.title.name}>Title</Label>
             <Input
-              key={fields.title.key}
+              id={fields.title.name}
               name={fields.title.name}
               defaultValue={fields.title.initialValue}
-              placeholder="Next.js blogging application"
+              placeholder="Nextjs blogging application"
               onChange={(e) => setTitle(e.target.value)}
               value={title}
             />
             <p className="text-red-500 text-sm">{fields.title.errors}</p>
           </div>
 
+          {/* Slug Input */}
           <div className="grid gap-2">
-            <Label>Slug</Label>
+            <Label htmlFor={fields.slug.name}>Slug</Label>
             <Input
-              key={fields.slug.key}
+              id={fields.slug.name}
               name={fields.slug.name}
               defaultValue={fields.slug.initialValue}
               placeholder="Article Slug"
@@ -98,10 +104,13 @@ export function EditForm({ data, siteId }: iAppProps) {
             <p className="text-red-500 text-sm">{fields.slug.errors}</p>
           </div>
 
+          {/* Small Description Textarea */}
           <div className="grid gap-2">
-            <Label>Small Description</Label>
+            <Label htmlFor={fields.smallDescripiton.name}>
+              Small Description
+            </Label>
             <Textarea
-              key={fields.smallDescripiton.key}
+              id={fields.smallDescripiton.name}
               name={fields.smallDescripiton.name}
               defaultValue={data.smallDescription}
               placeholder="Small Description for your blog article..."
@@ -112,12 +121,13 @@ export function EditForm({ data, siteId }: iAppProps) {
             </p>
           </div>
 
+          {/* Cover Image Upload */}
           <div className="grid gap-2">
-            <Label>Cover Image</Label>
+            <Label htmlFor={fields.coverImage.name}>Cover Image</Label>
             <input
               type="hidden"
               name={fields.coverImage.name}
-              key={fields.coverImage.key}
+              id={fields.coverImage.name}
               defaultValue={fields.coverImage.initialValue}
               value={imageUrl}
             />
@@ -132,7 +142,9 @@ export function EditForm({ data, siteId }: iAppProps) {
             ) : (
               <UploadDropzone
                 onClientUploadComplete={(res) => {
-                  setImageUrl(res[0].url);
+                  if (res.length > 0) {
+                    setImageUrl(res[0].url);
+                  }
                 }}
                 endpoint="imageUploader"
               />
@@ -140,25 +152,24 @@ export function EditForm({ data, siteId }: iAppProps) {
             <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>
           </div>
 
+          {/* Article Content Editor */}
           <div className="grid gap-2">
-            <Label>Article Content</Label>
+            <Label htmlFor={fields.articleContent.name}>Article Content</Label>
             <input
               type="hidden"
               name={fields.articleContent.name}
-              key={fields.articleContent.key}
-              defaultValue={JSON.stringify(value)} // Stringify the value to store in the hidden input
+              id={fields.articleContent.name}
+              defaultValue={fields.articleContent.initialValue}
+              value={JSON.stringify(value)}
             />
-            {/* Pass the initial value and setValue for the editor */}
-            <TailwindEditor
-              onChange={setValue} // Update the value state when the editor content changes
-              initialValue={value} // Pass the initial content to the editor
-            />
+            <TailwindEditor onChange={setValue} initialValue={value} />
             <p className="text-red-500 text-sm">
               {fields.articleContent.errors}
             </p>
           </div>
 
-          <Button>Submit</Button>
+          {/* Submit Button */}
+          <Button type="submit">Submit</Button>
         </form>
       </CardContent>
     </Card>

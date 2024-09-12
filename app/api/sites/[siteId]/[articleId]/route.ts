@@ -23,6 +23,5 @@ export async function GET(
   if (!data) {
     return notFound();
   }
-
   return NextResponse.json(data);
 }
