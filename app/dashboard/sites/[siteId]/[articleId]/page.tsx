@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import EditForm from '@/app/components/EditForm';
+import { EditForm } from '@/app/components/EditForm';
 import Loading from '@/app/components/loading';
+
 export default function EditArticle({
   params,
 }: {
@@ -25,6 +26,7 @@ export default function EditArticle({
         }
 
         const result = await response.json();
+        console.log('Fetched article data:', result); // Add this line to log the fetched data
         setData(result);
       } catch (error) {
         console.error(error);
@@ -50,7 +52,7 @@ export default function EditArticle({
         </Button>
         <h1>Edit your Article</h1>
       </div>
-      {data && <EditForm data={data} />}
+      {data && <EditForm data={data} siteId={params.siteId} />}
     </>
   );
 }

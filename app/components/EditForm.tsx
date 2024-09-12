@@ -1,87 +1,124 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { JSONContent } from 'novel'; // Assuming this is the content type
+import { useForm } from '@conform-to/react';
+import { parseWithZod } from '@conform-to/zod';
+import { postSchema } from '../utils/zodSchemas';
+import TailwindEditor from './dashboard/EditorWrapper';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { UploadDropzone } from '../utils/UploadthingComponents';
-import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { UploadDropzone } from '@/app/utils/UploadthingComponents';
 import Image from 'next/image';
-import { JSONContent } from 'novel';
-import TailwindEditor from './dashboard/EditorWrapper';
+import { Atom } from 'lucide-react';
+import { useActionState } from 'react';
+import { EditPostAction } from '../actions';
 
-interface EditableForm {
+interface iAppProps {
   data: {
     slug: string;
     title: string;
-    smallDescripiton: string;
-    articleContent: any;
+    smallDescription: string;
+    articleContent: JSONContent; // Explicitly define the JSONContent type
     id: string;
     image: string;
   };
+  siteId: string;
 }
 
-const EditForm = ({ data }: EditableForm) => {
-  const [imageUrl, setImageUrl] = useState<string | undefined>(data.image);
+export function EditForm({ data, siteId }: iAppProps) {
+  const [imageUrl, setImageUrl] = useState<undefined | string>(data.image);
   const [value, setValue] = useState<JSONContent | undefined>(
     data.articleContent
-  );
+  ); // JSONContent value for editor
+  const [slug, setSlugValue] = useState<string>(data.slug);
+  const [title, setTitle] = useState<string>(data.title);
 
-  useEffect(() => {
-    // Initialize form values if data is available
-    setImageUrl(data.image);
-    setValue(data.articleContent);
-  }, [data]);
+  const [lastResult, action] = useActionState(EditPostAction, undefined);
+  const [form, fields] = useForm({
+    lastResult,
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: postSchema });
+    },
+    shouldValidate: 'onBlur',
+    shouldRevalidate: 'onInput',
+  });
 
   return (
-    <Card>
+    <Card className="mt-5">
       <CardHeader>
         <CardTitle>Article Details</CardTitle>
         <CardDescription>
-          Edit your existing article details here
+          Lipsum dolor sit amet, consectetur adipiscing elit
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="flex flex-col gap-6">
+        <form
+          className="flex flex-col gap-6"
+          id={form.id}
+          onSubmit={form.onSubmit}
+          action={action}
+        >
+          <input type="hidden" name="articleId" value={data.id} />
+          <input type="hidden" name="siteId" value={siteId} />
+
           <div className="grid gap-2">
             <Label>Title</Label>
             <Input
-              name="title"
-              defaultValue={data.title} // Use data.title for default value
-              placeholder="Nextjs blogging application"
+              key={fields.title.key}
+              name={fields.title.name}
+              defaultValue={fields.title.initialValue}
+              placeholder="Next.js blogging application"
+              onChange={(e) => setTitle(e.target.value)}
+              value={title}
             />
+            <p className="text-red-500 text-sm">{fields.title.errors}</p>
           </div>
 
           <div className="grid gap-2">
             <Label>Slug</Label>
             <Input
-              name="slug"
-              defaultValue={data.slug} // Use data.slug for default value
+              key={fields.slug.key}
+              name={fields.slug.name}
+              defaultValue={fields.slug.initialValue}
               placeholder="Article Slug"
+              onChange={(e) => setSlugValue(e.target.value)}
+              value={slug}
             />
+            <Button className="w-fit" variant="secondary" type="button">
+              <Atom className="size-4 mr-2" /> Generate Slug
+            </Button>
+            <p className="text-red-500 text-sm">{fields.slug.errors}</p>
           </div>
 
           <div className="grid gap-2">
             <Label>Small Description</Label>
             <Textarea
-              name="smallDescription"
-              defaultValue={data.smallDescripiton} // Use data.smallDescripiton
+              key={fields.smallDescripiton.key}
+              name={fields.smallDescripiton.name}
+              defaultValue={data.smallDescription}
               placeholder="Small Description for your blog article..."
               className="h-32"
             />
+            <p className="text-red-500 text-sm">
+              {fields.smallDescripiton.errors}
+            </p>
           </div>
 
           <div className="grid gap-2">
             <Label>Cover Image</Label>
             <input
               type="hidden"
-              name="coverImage"
-              defaultValue={imageUrl}
+              name={fields.coverImage.name}
+              key={fields.coverImage.key}
+              defaultValue={fields.coverImage.initialValue}
               value={imageUrl}
             />
             {imageUrl ? (
@@ -100,23 +137,30 @@ const EditForm = ({ data }: EditableForm) => {
                 endpoint="imageUploader"
               />
             )}
+            <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>
           </div>
 
           <div className="grid gap-2">
             <Label>Article Content</Label>
             <input
               type="hidden"
-              name="articleContent"
-              value={JSON.stringify(value)} // Use value for the article content
+              name={fields.articleContent.name}
+              key={fields.articleContent.key}
+              defaultValue={JSON.stringify(value)} // Stringify the value to store in the hidden input
             />
-            <TailwindEditor onChange={setValue} initalValue={value} />
+            {/* Pass the initial value and setValue for the editor */}
+            <TailwindEditor
+              onChange={setValue} // Update the value state when the editor content changes
+              initialValue={value} // Pass the initial content to the editor
+            />
+            <p className="text-red-500 text-sm">
+              {fields.articleContent.errors}
+            </p>
           </div>
 
-          <Button type="submit">Save Changes</Button>
+          <Button>Submit</Button>
         </form>
       </CardContent>
     </Card>
   );
-};
-
-export default EditForm;
+}

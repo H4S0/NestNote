@@ -14,13 +14,13 @@ import { slashCommand, suggestionItems } from './SlashCommand';
 import { handleCommandNavigation } from 'novel/extensions';
 
 interface EditorProps {
-  initalValue?: JSONContent;
+  initialValue?: JSONContent;
   onChange: (value: JSONContent) => void;
 }
 
 const extentsions = [...defaultExtensions, slashCommand];
 
-const TailwindEditor = ({ initalValue, onChange }: EditorProps) => {
+const TailwindEditor = ({ initialValue, onChange }: EditorProps) => {
   return (
     <EditorRoot>
       <EditorContent
@@ -34,7 +34,7 @@ const TailwindEditor = ({ initalValue, onChange }: EditorProps) => {
           },
         }}
         extensions={extentsions}
-        initialContent={initalValue}
+        initialContent={initialValue}
         onUpdate={({ editor }) => {
           const json = editor.getJSON();
           onChange(json);

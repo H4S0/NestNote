@@ -11,5 +11,5 @@ export const postSchema = z.object({
   slug: z.string().min(1).max(190),
   coverImage: z.string().min(1),
   smallDescripiton: z.string().min(1).max(200),
-  articleContent: z.string().min(1),
+  articleContent: z.any(),
 });

@@ -41,7 +41,7 @@ export async function CreatePostAction(prevState: any, formData: FormData) {
   if (submission.status !== 'success') {
     return submission.reply();
   }
-  //TO-DO PREBACITI U API FOLDER POST CREATE METODU
+
   const response = await prisma.post.create({
     data: {
       title: submission.value.title,
@@ -55,4 +55,31 @@ export async function CreatePostAction(prevState: any, formData: FormData) {
   });
 
   return redirect('/dashboard/sites');
+}
+
+export async function EditPostAction(prevState: any, formData: FormData) {
+  const user = requireUser();
+
+  const submission = parseWithZod(formData, {
+    schema: postSchema,
+  });
+
+  if (submission.status !== 'success') {
+    return submission.reply();
+  }
+
+  const data = await prisma.post.update({
+    where: {
+      userId: (await user).id,
+      id: formData.get('articleId') as string,
+    },
+    data: {
+      title: submission.value.title,
+      smallDescription: submission.value.smallDescripiton,
+      slug: submission.value.slug,
+      articleContect: JSON.parse(submission.value.articleContent),
+      image: submission.value.coverImage,
+    },
+  });
+  return redirect(`/dashboard/sites/${formData.get('siteId')}`);
 }
