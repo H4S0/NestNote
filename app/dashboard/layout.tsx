@@ -1,5 +1,7 @@
+'use client';
+
 import Link from 'next/link';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import DashboardItems from '../components/dashboard/DashboardItems';
 import {
   CircleUser,
@@ -14,10 +16,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
 export const navLinks: { name: string; href: string; icon: any }[] = [
   {
@@ -38,6 +43,25 @@ export const navLinks: { name: string; href: string; icon: any }[] = [
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
+  const [username, setUsername] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchUsername = async () => {
+      try {
+        const response = await fetch('/api/auth/creation');
+        const result = await response.json();
+        if (result.firstName) {
+          setUsername(result.firstName);
+        } else {
+          setUsername('Guest');
+        }
+      } catch (error) {
+        console.error('Error fetching username:', error);
+        setUsername('Guest');
+      }
+    };
+
+    fetchUsername();
+  }, []);
   return (
     <section className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-muted/40 md:block">
@@ -73,6 +97,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{username}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <LogoutLink>Logout</LogoutLink>
                 </DropdownMenuItem>
