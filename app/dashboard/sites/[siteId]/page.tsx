@@ -97,7 +97,7 @@ export default function SiteIdRoute({
         </Button>
         <Button asChild>
           <Link href={`/dashboard/sites/${params.siteId}/create`}>
-            <PlusCircle className="size-4 mr-2" /> Create Article
+            <PlusCircle className="size-4 mr-2" /> Create Notes
           </Link>
         </Button>
       </div>
@@ -117,7 +117,7 @@ export default function SiteIdRoute({
 
           <Button asChild>
             <Link href={'/dashboard/sites/new'}>
-              <PlusCircle className="mr-4 size-4" /> Create Post
+              <PlusCircle className="mr-4 size-4" /> Create Note
             </Link>
           </Button>
         </div>
@@ -125,9 +125,9 @@ export default function SiteIdRoute({
         <div>
           <Card>
             <CardHeader>
-              <CardTitle>Articles</CardTitle>
+              <CardTitle>Notes</CardTitle>
               <CardDescription>
-                Manage your Articles in a simple and intuitive interface
+                Manage your Notes in a simple and intuitive interface
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -136,9 +136,9 @@ export default function SiteIdRoute({
                   <TableRow>
                     <TableHead>Image</TableHead>
                     <TableHead>Subject</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>Learning Status</TableHead>
                     <TableHead>Created At</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead className="text-right">Notes</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -161,7 +161,8 @@ export default function SiteIdRoute({
                           variant="outline"
                           className="bg-green-500/10 text-green-500"
                         >
-                          Published
+                          Published{' '}
+                          {/*dodati dropdown menu i status not started,finished,learning */}
                         </Badge>
                       </TableCell>
                       <TableCell>{item.createdAt.slice(0, 10)}</TableCell>

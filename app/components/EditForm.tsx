@@ -28,7 +28,6 @@ interface iAppProps {
     slug: string;
     title: string;
     smallDescription: string;
-    articleContent: JSONContent; // Assuming this should be JSONContent type
     id: string;
     image: string;
   };
@@ -37,9 +36,7 @@ interface iAppProps {
 
 export function EditForm({ data, siteId }: iAppProps) {
   const [imageUrl, setImageUrl] = useState<string | undefined>(data.image);
-  const [value, setValue] = useState<JSONContent | undefined>(
-    data.articleContent
-  );
+
   const [slug, setSlugValue] = useState<string | undefined>(data.slug);
   const [title, setTitle] = useState<string | undefined>(data.title);
 
@@ -59,8 +56,8 @@ export function EditForm({ data, siteId }: iAppProps) {
   return (
     <Card className="mt-5">
       <CardHeader>
-        <CardTitle>Article Details</CardTitle>
-        <CardDescription>Provide details for the article.</CardDescription>
+        <CardTitle>Notes Details</CardTitle>
+        <CardDescription>Provide details for the notes.</CardDescription>
       </CardHeader>
       <CardContent>
         <form
@@ -106,9 +103,7 @@ export function EditForm({ data, siteId }: iAppProps) {
 
           {/* Small Description Textarea */}
           <div className="grid gap-2">
-            <Label htmlFor={fields.smallDescripiton.name}>
-              Small Description
-            </Label>
+            <Label htmlFor={fields.smallDescripiton.name}>Your Notes</Label>
             <Textarea
               id={fields.smallDescripiton.name}
               name={fields.smallDescripiton.name}
@@ -150,22 +145,6 @@ export function EditForm({ data, siteId }: iAppProps) {
               />
             )}
             <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>
-          </div>
-
-          {/* Article Content Editor */}
-          <div className="grid gap-2">
-            <Label htmlFor={fields.articleContent.name}>Article Content</Label>
-            <input
-              type="hidden"
-              name={fields.articleContent.name}
-              id={fields.articleContent.name}
-              defaultValue={fields.articleContent.initialValue}
-              value={JSON.stringify(value)}
-            />
-            <TailwindEditor onChange={setValue} initialValue={value} />
-            <p className="text-red-500 text-sm">
-              {fields.articleContent.errors}
-            </p>
           </div>
 
           <Button type="submit">Submit</Button>

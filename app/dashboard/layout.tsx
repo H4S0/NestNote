@@ -1,7 +1,14 @@
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import DashboardItems from '../components/dashboard/DashboardItems';
-import { CircleUser, DollarSign, Globe, HeartOff, Home } from 'lucide-react';
+import {
+  CircleUser,
+  DollarSign,
+  Globe,
+  HeartOff,
+  Home,
+  NotebookTabs,
+} from 'lucide-react';
 import { ThemeToggle } from '../components/dashboard/ThemeToggle';
 import {
   DropdownMenu,
@@ -21,7 +28,7 @@ export const navLinks: { name: string; href: string; icon: any }[] = [
   {
     name: 'Notes',
     href: '/dashboard/sites',
-    icon: Globe,
+    icon: NotebookTabs,
   },
   {
     name: 'Pricing',

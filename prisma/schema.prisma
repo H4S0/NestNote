@@ -44,7 +44,6 @@ model Site {
 model Post {
   id               String @id @default(uuid())
   title            String
-  articleContect   Json
   smallDescription String
   image            String
   slug             String @unique

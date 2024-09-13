@@ -15,7 +15,6 @@ export async function GET(
       title: true,
       smallDescription: true,
       slug: true,
-      articleContect: true,
       id: true,
     },
   });

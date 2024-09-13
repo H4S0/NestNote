@@ -48,7 +48,7 @@ export default function EditArticle({
             <ArrowLeft />
           </Link>
         </Button>
-        <h1>Edit your Article</h1>
+        <h1>Edit your Notes</h1>
       </div>
       {data && <EditForm data={data} siteId={params.siteId} />}
     </>

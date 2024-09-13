@@ -23,7 +23,6 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
     data: {
       description: submission.value.description,
       name: submission.value.name,
-      subdirectory: submission.value.subdirectory,
       userId: (await user).id,
     },
   });
@@ -47,7 +46,6 @@ export async function CreatePostAction(prevState: any, formData: FormData) {
       title: submission.value.title,
       smallDescription: submission.value.smallDescripiton,
       slug: submission.value.slug,
-      articleContect: JSON.parse(submission.value.articleContent),
       image: submission.value.coverImage,
       userId: (await user).id,
       siteId: formData.get('siteId') as string,
@@ -77,7 +75,6 @@ export async function EditPostAction(prevState: any, formData: FormData) {
       title: submission.value.title,
       smallDescription: submission.value.smallDescripiton,
       slug: submission.value.slug,
-      articleContect: JSON.parse(submission.value.articleContent),
       image: submission.value.coverImage,
     },
   });

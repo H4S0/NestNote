@@ -94,7 +94,7 @@ export default function ArticleCreationRoute({
             </div>
 
             <div className="grid gap-2">
-              <Label>Small Description</Label>
+              <Label>Your Notes</Label>
               <Textarea
                 key={fields.smallDescripiton.key}
                 name={fields.smallDescripiton.name}
@@ -136,22 +136,7 @@ export default function ArticleCreationRoute({
               <p className="text-red-500 text-sm">{fields.coverImage.errors}</p>
             </div>
 
-            <div className="grid gap-2">
-              <Label>Article Content</Label>
-              <input
-                type="hidden"
-                name={fields.articleContent.name}
-                key={fields.articleContent.key}
-                defaultValue={fields.articleContent.initialValue}
-                value={JSON.stringify(value)}
-              />
-              <TailwindEditor onChange={setValue} initalValue={value} />
-              <p className="text-red-500 text-sm">
-                {fields.articleContent.errors}
-              </p>
-            </div>
-
-            <Button type="submit">Create Article</Button>
+            <Button type="submit">Create Notes</Button>
           </form>
         </CardContent>
       </Card>
