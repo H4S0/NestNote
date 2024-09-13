@@ -168,7 +168,6 @@ export function EditForm({ data, siteId }: iAppProps) {
             </p>
           </div>
 
-          {/* Submit Button */}
           <Button type="submit">Submit</Button>
         </form>
       </CardContent>

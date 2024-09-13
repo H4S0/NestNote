@@ -135,7 +135,7 @@ export default function SiteIdRoute({
                 <TableHeader>
                   <TableRow>
                     <TableHead>Image</TableHead>
-                    <TableHead>Title</TableHead>
+                    <TableHead>Subject</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Created At</TableHead>
                     <TableHead className="text-right">Actions</TableHead>

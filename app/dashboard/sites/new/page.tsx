@@ -35,16 +35,16 @@ const NewSiteRoute = () => {
     <div className="flex flex-col flex-1 items-center justify-center">
       <Card className="max-w-[450px]">
         <CardHeader>
-          <CardTitle>Create site</CardTitle>
+          <CardTitle>Create note</CardTitle>
           <CardDescription>
-            Create your Site here. Click the button below once your done...
+            Create your Note here. Click the button below once your done...
           </CardDescription>
         </CardHeader>
         <form id={form.id} onSubmit={form.onSubmit} action={action}>
           <CardContent>
             <div className="flex flex-col gap-y-6">
               <div className="grid gap-3 ">
-                <Label>Site Name</Label>
+                <Label>Note Name</Label>
                 <Input
                   name={fields.name.name}
                   key={fields.name.key}
@@ -53,18 +53,7 @@ const NewSiteRoute = () => {
                 />
                 <p className="text-red-500 text-sm">{fields.name.errors}</p>
               </div>
-              <div className="grid gap-3">
-                <Label>Subdirectory</Label>
-                <Input
-                  placeholder="Subdirectory"
-                  name={fields.subdirectory.name}
-                  key={fields.subdirectory.key}
-                  defaultValue={fields.subdirectory.initialValue}
-                />
-                <p className="text-red-500 text-sm">
-                  {fields.subdirectory.errors}
-                </p>
-              </div>
+
               <div className="grid gap-3">
                 <Label>Description</Label>
                 <Textarea
@@ -77,6 +66,10 @@ const NewSiteRoute = () => {
                   {fields.description.errors}
                 </p>
               </div>
+              <p className="text-sm font-sans">
+                When you create your note, the day of the note will be displayed
+                on the card!
+              </p>
             </div>
           </CardContent>
           <CardFooter>

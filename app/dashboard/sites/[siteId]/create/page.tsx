@@ -50,12 +50,12 @@ export default function ArticleCreationRoute({
             <ArrowLeft className="size-4" />
           </Link>
         </Button>
-        <h1 className="text-xl font-semibold">Create Article</h1>
+        <h1 className="text-xl font-semibold">Create Notes</h1>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Article Details</CardTitle>
+          <CardTitle>Notes Details</CardTitle>
           <CardDescription>
             Lipsum dolor sit amet, consectetur adipiscing elit
           </CardDescription>

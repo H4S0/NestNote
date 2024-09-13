@@ -6,6 +6,7 @@ import { FileIcon, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 import {
   Card,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -19,7 +20,6 @@ interface Site {
   id: string;
   name: string;
   description: string;
-  subdirectory: string;
   createdAt: Date;
   updatedAt: Date;
   imageUrl?: string | null; // Allow both null and undefined
@@ -32,7 +32,7 @@ const SitesClient = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch('/api/sites'); // Fetch data from the API route
+      const res = await fetch('/api/sites');
       const sites = await res.json();
       setData(sites);
       setLoading(false);
@@ -50,7 +50,7 @@ const SitesClient = () => {
       <div className="flex w-full justify-end">
         <Button asChild>
           <Link href={'/dashboard/sites/new'}>
-            <PlusCircle className="mr-4 size-4" /> Create Site
+            <PlusCircle className="mr-4 size-4" /> Create Note
           </Link>
         </Button>
       </div>
@@ -61,7 +61,7 @@ const SitesClient = () => {
             <FileIcon className="size-10 text-primary" />
           </div>
           <h2 className="mt-6 text-xl font-semibold">
-            You don’t have any Sites created
+            You don’t have any Notes created
           </h2>
           <p className="mb-8 mt-2 text-center text-sm leading-2 text-muted-foreground max-w-sm mx-auto">
             You currently don’t have any Sites. Please create some so that you
@@ -70,7 +70,7 @@ const SitesClient = () => {
 
           <Button asChild>
             <Link href={'/dashboard/sites/new'}>
-              <PlusCircle className="mr-4 size-4" /> Create Site
+              <PlusCircle className="mr-4 size-4" /> Create Note
             </Link>
           </Button>
         </div>
@@ -90,11 +90,19 @@ const SitesClient = () => {
                 <CardTitle>{item.name}</CardTitle>
                 <CardDescription>{item.description}</CardDescription>
               </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-3">
+                  <p>Notes from</p>
+                  <p>
+                    {new Date(item.createdAt).toLocaleDateString('en-US', {
+                      weekday: 'long',
+                    })}
+                  </p>
+                </div>
+              </CardContent>
               <CardFooter>
                 <Button className="w-full">
-                  <Link href={`/dashboard/sites/${item.id}`}>
-                    View Articles
-                  </Link>
+                  <Link href={`/dashboard/sites/${item.id}`}>View Notes</Link>
                 </Button>
               </CardFooter>
             </Card>
