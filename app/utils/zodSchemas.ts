@@ -3,7 +3,6 @@ import { z } from 'zod';
 export const siteSchema = z.object({
   name: z.string().min(1).max(35),
   description: z.string().min(1).max(150),
-  subdirectory: z.string().min(1).max(40),
 });
 
 export const postSchema = z.object({
@@ -11,5 +10,4 @@ export const postSchema = z.object({
   slug: z.string().min(1).max(190),
   coverImage: z.string().min(1),
   smallDescripiton: z.string().min(1).max(200),
-  articleContent: z.any(),
 });

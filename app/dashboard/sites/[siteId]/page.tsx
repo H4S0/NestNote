@@ -108,10 +108,10 @@ export default function SiteIdRoute({
             <FileIcon className="size-10 text-primary" />
           </div>
           <h2 className="mt-6 text-xl font-semibold">
-            You don't have any posts created
+            You don't have any notes created
           </h2>
           <p className="mb-8 mt-2 text-center text-sm leading-2 text-muted-foreground max-w-sm mx-auto">
-            You currently don’t have any posts. Please create some so that you
+            You currently don’t have any notes. Please create some so that you
             can see them right here!
           </p>
 
