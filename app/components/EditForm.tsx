@@ -66,11 +66,9 @@ export function EditForm({ data, siteId }: iAppProps) {
           onSubmit={form.onSubmit}
           action={action}
         >
-          {/* Hidden fields for article and site IDs */}
           <input type="hidden" name="articleId" value={data.id} />
           <input type="hidden" name="siteId" value={siteId} />
 
-          {/* Title Input */}
           <div className="grid gap-2">
             <Label htmlFor={fields.title.name}>Title</Label>
             <Input
@@ -84,7 +82,6 @@ export function EditForm({ data, siteId }: iAppProps) {
             <p className="text-red-500 text-sm">{fields.title.errors}</p>
           </div>
 
-          {/* Slug Input */}
           <div className="grid gap-2">
             <Label htmlFor={fields.slug.name}>Slug</Label>
             <Input
@@ -101,7 +98,6 @@ export function EditForm({ data, siteId }: iAppProps) {
             <p className="text-red-500 text-sm">{fields.slug.errors}</p>
           </div>
 
-          {/* Small Description Textarea */}
           <div className="grid gap-2">
             <Label htmlFor={fields.smallDescripiton.name}>Your Notes</Label>
             <Textarea
@@ -116,7 +112,6 @@ export function EditForm({ data, siteId }: iAppProps) {
             </p>
           </div>
 
-          {/* Cover Image Upload */}
           <div className="grid gap-2">
             <Label htmlFor={fields.coverImage.name}>Cover Image</Label>
             <input

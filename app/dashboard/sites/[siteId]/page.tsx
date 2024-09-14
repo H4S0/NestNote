@@ -90,7 +90,7 @@ export default function SiteIdRoute({
           </Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href={'#'}>
+          <Link href={`/dashboard/sites/${params.siteId}/settings`}>
             <Settings className="size-4 mr-2" />
             Settings
           </Link>

@@ -80,3 +80,31 @@ export async function EditPostAction(prevState: any, formData: FormData) {
   });
   return redirect(`/dashboard/sites/${formData.get('siteId')}`);
 }
+
+export async function UpdateImage(formData: FormData) {
+  const user = await requireUser();
+
+  const data = await prisma.site.update({
+    where: {
+      userId: user.id,
+      id: formData.get('siteId') as string,
+    },
+    data: {
+      imageUrl: formData.get('imageUrl') as string,
+    },
+  });
+
+  return redirect(`/dashboard/sites/${formData.get('siteId')}`);
+}
+
+export async function DeleteNotebook(formData: FormData) {
+  const user = requireUser();
+
+  const data = await prisma.site.delete({
+    where: {
+      userId: (await user).id,
+      id: formData.get('siteId') as string,
+    },
+  });
+  return redirect('/dashboard/sites');
+}
