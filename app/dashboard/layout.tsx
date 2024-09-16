@@ -69,7 +69,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex item-center gap-2 font-semibold">
               <h3 className="text-2xl">
-                Blog <span className="text-primary">Haso</span>
+                Nest<span className="text-primary">Note</span>
               </h3>
             </Link>
           </div>
