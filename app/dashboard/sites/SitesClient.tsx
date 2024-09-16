@@ -15,6 +15,7 @@ import {
 import Image from 'next/image';
 import DefaultImage from '@/public/default.png';
 import Loading from '@/app/components/loading';
+import { Input } from '@/components/ui/input';
 
 interface Site {
   id: string;
@@ -22,52 +23,77 @@ interface Site {
   description: string;
   createdAt: Date;
   updatedAt: Date;
-  imageUrl?: string | null; // Allow both null and undefined
+  imageUrl?: string | null;
   userId: string | null;
 }
 
 const SitesClient = () => {
-  const [data, setData] = useState<Site[] | null>(null);
+  const [data, setData] = useState<Site[]>([]); // Initialize with an empty array
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch('/api/sites');
-      const sites = await res.json();
-      setData(sites);
-      setLoading(false);
+      setLoading(true);
+      try {
+        const res = await fetch(
+          `/api/sites?search=${encodeURIComponent(searchTerm)}`
+        );
+        if (!res.ok) {
+          throw new Error('Failed to fetch sites');
+        }
+        const sites = await res.json();
+        setData(sites || []); // Ensure data is an array, fallback to empty array
+      } catch (error) {
+        console.error(error);
+        setData([]); // Ensure fallback to an empty array on error
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
-  }, []);
+  }, [searchTerm]);
 
-  if (loading) {
+  // Loading state only for card display, not for the entire page
+  if (loading && data.length === 0) {
     return <Loading />;
   }
 
+  // Filtered sites based on search input
+  const filteredData = data.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <>
-      <div className="flex w-full justify-end">
+      <div className="flex items-center justify-between">
+        <div className="w-64">
+          <Input
+            placeholder="Search for your notebook"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         <Button asChild>
           <Link href={'/dashboard/sites/new'}>
-            <PlusCircle className="mr-4 size-4" /> Create Note
+            <PlusCircle className="mr-4 size-4" /> Create Notebook
           </Link>
         </Button>
       </div>
 
-      {data === null || data.length === 0 ? (
+      {/* Handle case when no data is found */}
+      {filteredData.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
           <div className="flex size-20 items-center justify-center rounded-full bg-primary/30">
             <FileIcon className="size-10 text-primary" />
           </div>
           <h2 className="mt-6 text-xl font-semibold">
-            You don’t have any Notes created
+            No matching notebooks found
           </h2>
           <p className="mb-8 mt-2 text-center text-sm leading-2 text-muted-foreground max-w-sm mx-auto">
-            You currently don’t have any Sites. Please create some so that you
-            can see them right here!
+            Try searching for another term or create a new notebook.
           </p>
-
           <Button asChild>
             <Link href={'/dashboard/sites/new'}>
               <PlusCircle className="mr-4 size-4" /> Create Note
@@ -76,7 +102,7 @@ const SitesClient = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
-          {data.map((item) => (
+          {filteredData.map((item) => (
             <Card key={item.id}>
               <Image
                 priority
