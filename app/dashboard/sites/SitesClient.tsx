@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { FileIcon, PlusCircle } from 'lucide-react';
+import { FileIcon, PlusCircle, Search } from 'lucide-react';
 import Link from 'next/link';
 import {
   Card,
@@ -28,47 +28,45 @@ interface Site {
 }
 
 const SitesClient = () => {
-  const [data, setData] = useState<Site[]>([]); // Initialize with an empty array
+  const [data, setData] = useState<Site[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(
-          `/api/sites?search=${encodeURIComponent(searchTerm)}`
-        );
-        if (!res.ok) {
-          throw new Error('Failed to fetch sites');
-        }
-        const sites = await res.json();
-        setData(sites || []); // Ensure data is an array, fallback to empty array
-      } catch (error) {
-        console.error(error);
-        setData([]); // Ensure fallback to an empty array on error
-      } finally {
-        setLoading(false);
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const queryParam = searchTerm
+        ? `search=${encodeURIComponent(searchTerm)}`
+        : '';
+      const res = await fetch(`/api/sites?${queryParam}`);
+      if (!res.ok) {
+        throw new Error('Failed to fetch sites');
       }
-    };
+      const sites = await res.json();
+      setData(sites || []);
+    } catch (error) {
+      console.error(error);
+      setData([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchData();
+  useEffect(() => {
+    fetchData(); // Fetch data whenever searchTerm changes
   }, [searchTerm]);
 
-  // Loading state only for card display, not for the entire page
-  if (loading && data.length === 0) {
-    return <Loading />;
-  }
-
-  // Filtered sites based on search input
+  // Filter data based on searchTerm
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const shouldShowLoadingText = searchTerm === '' && loading;
+
   return (
     <>
       <div className="flex items-center justify-between">
-        <div className="w-64">
+        <div className="flex items-center space-x-2">
           <Input
             placeholder="Search for your notebook"
             value={searchTerm}
@@ -82,17 +80,21 @@ const SitesClient = () => {
         </Button>
       </div>
 
-      {/* Handle case when no data is found */}
-      {filteredData.length === 0 ? (
+      {shouldShowLoadingText ? (
+        <div className="flex items-center justify-center p-8 text-center">
+          <p className="text-lg text-muted-foreground">Loading data...</p>
+        </div>
+      ) : filteredData.length === 0 && searchTerm === '' ? (
         <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
           <div className="flex size-20 items-center justify-center rounded-full bg-primary/30">
             <FileIcon className="size-10 text-primary" />
           </div>
           <h2 className="mt-6 text-xl font-semibold">
-            No matching notebooks found
+            You don’t have any Notes created
           </h2>
           <p className="mb-8 mt-2 text-center text-sm leading-2 text-muted-foreground max-w-sm mx-auto">
-            Try searching for another term or create a new notebook.
+            You currently don’t have any Sites. Please create some so that you
+            can see them right here!
           </p>
           <Button asChild>
             <Link href={'/dashboard/sites/new'}>

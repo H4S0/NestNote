@@ -4,7 +4,8 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { requireUser } from '@/app/utils/requireUser';
 
 export async function GET(request: Request) {
-  const { search } = new URL(request.url).searchParams; // Extract search parameter
+  const url = new URL(request.url);
+  const search = url.searchParams.get('search') || ''; // Extract search parameter
 
   try {
     const user = requireUser();
@@ -17,7 +18,7 @@ export async function GET(request: Request) {
       where: {
         userId: (await user).id,
         name: {
-          contains: search || '', // Filter based on search term
+          contains: search, // Filter based on search term
           mode: 'insensitive', // Case insensitive search
         },
       },
@@ -28,7 +29,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(sites);
   } catch (error) {
-    console.error('Error fetching sites:', error); // Log error to server console
+    console.error('Error fetching sites:', error); // Log the error to the server console
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
