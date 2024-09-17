@@ -16,6 +16,7 @@ import Image from 'next/image';
 import DefaultImage from '@/public/default.png';
 import Loading from '@/app/components/loading';
 import { Input } from '@/components/ui/input';
+import EmptyNote from '@/app/components/dashboard/EmptyNote';
 
 interface Site {
   id: string;
@@ -85,23 +86,7 @@ const SitesClient = () => {
           <p className="text-lg text-muted-foreground">Loading data...</p>
         </div>
       ) : filteredData.length === 0 && searchTerm === '' ? (
-        <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
-          <div className="flex size-20 items-center justify-center rounded-full bg-primary/30">
-            <FileIcon className="size-10 text-primary" />
-          </div>
-          <h2 className="mt-6 text-xl font-semibold">
-            You don’t have any Notes created
-          </h2>
-          <p className="mb-8 mt-2 text-center text-sm leading-2 text-muted-foreground max-w-sm mx-auto">
-            You currently don’t have any Sites. Please create some so that you
-            can see them right here!
-          </p>
-          <Button asChild>
-            <Link href={'/dashboard/sites/new'}>
-              <PlusCircle className="mr-4 size-4" /> Create Note
-            </Link>
-          </Button>
-        </div>
+        <EmptyNote />
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
           {filteredData.map((item) => (
