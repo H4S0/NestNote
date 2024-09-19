@@ -42,16 +42,22 @@ model Site {
 }
 
 model Post {
-  id               String @id @default(uuid())
+  id               String     @id @default(uuid())
   title            String
   smallDescription String
   image            String
-  slug             String @unique
+  slug             String     @unique
+  status           PostStatus @default(NOT_STARTED)
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @default(now())
+  Site             Site?      @relation(fields: [siteId], references: [id])
+  siteId           String?
+  User             User?      @relation(fields: [userId], references: [id])
+  userId           String?
+}
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-  Site      Site?    @relation(fields: [siteId], references: [id])
-  siteId    String?
-  User      User?    @relation(fields: [userId], references: [id])
-  userId    String?
+enum PostStatus {
+  NOT_STARTED
+  LEARNING
+  FINISHED
 }

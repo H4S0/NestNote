@@ -22,6 +22,13 @@ import { parseWithZod } from '@conform-to/zod';
 import { postSchema } from '@/app/utils/zodSchemas';
 import { CreatePostAction, EditPostAction } from '@/app/actions';
 import { unknown } from 'zod';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 interface iAppProps {
   data: {
@@ -40,7 +47,6 @@ export function EditForm({ data, siteId }: iAppProps) {
   const [slug, setSlugValue] = useState<string | undefined>(data.slug);
   const [title, setTitle] = useState<string | undefined>(data.title);
 
-  // Initialize form handling
   const [lastResult, action] = useActionState(EditPostAction, undefined);
   const [form, fields] = useForm({
     lastResult,
@@ -68,7 +74,18 @@ export function EditForm({ data, siteId }: iAppProps) {
         >
           <input type="hidden" name="articleId" value={data.id} />
           <input type="hidden" name="siteId" value={siteId} />
-
+          <div className="grid gap-2">
+            <Select>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Learning status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="light">Not started</SelectItem>
+                <SelectItem value="dark">Learning</SelectItem>
+                <SelectItem value="system">Finished</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="grid gap-2">
             <Label htmlFor={fields.title.name}>Title</Label>
             <Input
