@@ -37,6 +37,7 @@ interface iAppProps {
     smallDescription: string;
     id: string;
     image: string;
+    status: string;
   };
   siteId: string;
 }
@@ -75,14 +76,14 @@ export function EditForm({ data, siteId }: iAppProps) {
           <input type="hidden" name="articleId" value={data.id} />
           <input type="hidden" name="siteId" value={siteId} />
           <div className="grid gap-2">
-            <Select>
+            <Select name="status">
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Learning status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="light">Not started</SelectItem>
-                <SelectItem value="dark">Learning</SelectItem>
-                <SelectItem value="system">Finished</SelectItem>
+                <SelectItem value="NOT_STARTED">Not started</SelectItem>
+                <SelectItem value="LEARNING">Learning</SelectItem>
+                <SelectItem value="FINISHED">Finished</SelectItem>
               </SelectContent>
             </Select>
           </div>

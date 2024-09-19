@@ -143,10 +143,31 @@ export default function SiteIdRoute({
                       <TableCell>
                         <Badge
                           variant="outline"
-                          className="bg-green-500/10 text-green-500"
+                          className={(() => {
+                            switch (item.status) {
+                              case 'NOT_STARTED':
+                                return 'bg-red-500/10 text-red-500';
+                              case 'LEARNING':
+                                return 'bg-blue-500/10 text-blue-500';
+                              case 'FINISHED':
+                                return 'bg-green-500/10 text-green-500';
+                              default:
+                                return '';
+                            }
+                          })()}
                         >
-                          Published{' '}
-                          {/*dodati dropdown menu i status not started,finished,learning */}
+                          {(() => {
+                            switch (item.status) {
+                              case 'NOT_STARTED':
+                                return 'Not started';
+                              case 'LEARNING':
+                                return 'Learning';
+                              case 'FINISHED':
+                                return 'Finished';
+                              default:
+                                return '';
+                            }
+                          })()}
                         </Badge>
                       </TableCell>
                       <TableCell>{item.createdAt.slice(0, 10)}</TableCell>
