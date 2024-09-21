@@ -15,6 +15,14 @@ const DashboradIndexPage = () => {
   const [isRunning, setIsRunning] = useState<boolean>(false); // To track if the timer is running
   const [isPaused, setIsPaused] = useState<boolean>(false); // To track if the timer is paused
 
+
+  useEffect(()=>{
+    const fetchCount = async () => {
+      try{
+        const response  = await fetch('')
+      }
+    }
+  })
   // Handle play button click
   const handlePlay = () => {
     if (pomodoroTime > 0) {

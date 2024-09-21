@@ -14,6 +14,16 @@ export async function GET(request: Request) {
       return NextResponse.redirect('/api/auth/login');
     }
 
+    const count = await prisma.site.count({
+      where: {
+        userId: (await user).id,
+        name: {
+          contains: search, // Filter based on search term
+          mode: 'insensitive', // Case insensitive search
+        },
+      },
+    });
+
     const sites = await prisma.site.findMany({
       where: {
         userId: (await user).id,
