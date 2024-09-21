@@ -5,6 +5,8 @@ import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import Modal from '../components/dashboard/pomodoroTimerModal';
 import { Button } from '@/components/ui/button';
+import { off } from 'process';
+import Loading from '../components/loading';
 
 const DashboradIndexPage = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -15,14 +17,17 @@ const DashboradIndexPage = () => {
   const [isRunning, setIsRunning] = useState<boolean>(false); // To track if the timer is running
   const [isPaused, setIsPaused] = useState<boolean>(false); // To track if the timer is paused
   const [count, setCount] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const fetchCount = async () => {
+      setLoading(true);
+
       try {
         const response = await fetch('/api/sites');
         const data = await response.json();
         const { count } = data;
         setCount(count);
+        setLoading(false);
         console.log(data);
       } catch (error) {
         console.log(error);
@@ -30,6 +35,7 @@ const DashboradIndexPage = () => {
     };
     fetchCount();
   }, []);
+
   // Handle play button click
   const handlePlay = () => {
     if (pomodoroTime > 0) {
@@ -120,7 +126,9 @@ const DashboradIndexPage = () => {
           <Card className="h-full">
             <CardHeader>Total Notebooks</CardHeader>
             <CardContent>
-              Number of total notebooks that your created: {count}
+              Number of total notebooks that your created:{' '}
+              {loading ? <Loading /> : count}{' '}
+              {/*dodati samo loading text ne animaciju */}
             </CardContent>
           </Card>
 
