@@ -2,44 +2,48 @@
 
 import React, { useEffect, useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import Modal from '../components/dashboard/pomodoroTimer';
+import { Button } from '@/components/ui/button';
 
 const DashboradIndexPage = () => {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>(new Date());
   const [showModal, setShowModal] = useState<boolean>(false);
   const [pomodoroTime, setPomodoroTime] = useState<number>(25); // Default 25 minutes
   const [breakTime, setBreakTime] = useState<number>(5); // Default 5 minutes
   const [timeLeft, setTimeLeft] = useState<number | null>(null); // Time left on the timer
   const [isRunning, setIsRunning] = useState<boolean>(false); // To track if the timer is running
+  const [isPaused, setIsPaused] = useState<boolean>(false); // To track if the timer is paused
 
   // Handle play button click
   const handlePlay = () => {
     if (pomodoroTime > 0) {
       setTimeLeft(pomodoroTime * 60); // Set the time for the timer (convert minutes to seconds)
       setIsRunning(true);
+      setIsPaused(false);
       setShowModal(false); // Close the modal
     } else {
       alert('Pomodoro time must be greater than 0');
     }
   };
 
+  // Handle resume button click after pause
+  const handleResume = () => {
+    setIsRunning(true);
+    setIsPaused(false);
+  };
+
   // Handle pause button click
   const handlePause = () => {
     setIsRunning(false);
+    setIsPaused(true); // Mark as paused
   };
 
   // Handle cancel button click
   const handleCancel = () => {
     setTimeLeft(null); // Reset the timer
     setIsRunning(false);
+    setIsPaused(false);
   };
 
   // Timer logic to count down
@@ -92,65 +96,76 @@ const DashboradIndexPage = () => {
       alert('Break time cannot be negative');
     }
   };
+
   return (
     <>
       <div>
-        <div className="flex items-center justify-between gap-4">
-          <div className="flex flex-row w-full gap-4">
-            <Card className="w-full ">
-              <CardHeader>Total Notebooks</CardHeader>
-              <CardContent>notebooks_number</CardContent>
-            </Card>
-            <Card className="w-full">
-              <CardHeader>Total Notebooks</CardHeader>
-              <CardContent>notebooks_number</CardContent>
-            </Card>
-          </div>
-          <div className="flex flex-row w-full gap-4">
-            <Card className="w-full">
-              <CardHeader>Total Notebooks</CardHeader>
-              <CardContent>notebooks_number</CardContent>
-            </Card>
-            <Card className="w-full border rounded-lg shadow-lg p-4">
-              <CardHeader className="text-lg font-bold mb-2">
-                Pomodoro Timer
-              </CardHeader>
-              <CardContent>
-                {timeLeft !== null ? (
-                  <div className="text-center">
-                    <p className="text-2xl font-semibold mb-4">{`Time Left: ${formatTime(timeLeft)}`}</p>
-                    <div className="flex justify-center space-x-4">
-                      <button
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+          {/* First card */}
+          <Card className="h-full">
+            <CardHeader>Total Notebooks</CardHeader>
+            <CardContent>notebooks_number</CardContent>
+          </Card>
+
+          {/* Second card */}
+          <Card className="h-full">
+            <CardHeader>Total Notebooks</CardHeader>
+            <CardContent>notebooks_number</CardContent>
+          </Card>
+
+          {/* Third card */}
+          <Card className="h-full">
+            <CardHeader>Total Notebooks</CardHeader>
+            <CardContent>notebooks_number</CardContent>
+          </Card>
+
+          {/* Fourth card (Pomodoro Timer) */}
+          <Card className="h-full border rounded-lg shadow-lg p-4">
+            <CardHeader className="text-lg font-bold mb-2">
+              Pomodoro Timer
+            </CardHeader>
+            <CardContent>
+              {timeLeft !== null ? (
+                <div className="text-center">
+                  <p className="text-2xl font-semibold mb-4">{`Time Left: ${formatTime(timeLeft)}`}</p>
+                  <div className="flex justify-center space-x-4">
+                    {isPaused ? (
+                      <Button
+                        onClick={handleResume}
+                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
+                      >
+                        Play
+                      </Button>
+                    ) : (
+                      <Button
                         onClick={handlePause}
                         className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md"
                       >
                         Pause
-                      </button>
-                      <button
-                        onClick={handleCancel}
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
-                      >
-                        Cancel
-                      </button>
-                    </div>
+                      </Button>
+                    )}
+                    <Button
+                      onClick={handleCancel}
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
+                    >
+                      Cancel
+                    </Button>
                   </div>
-                ) : (
-                  <button
-                    onClick={() => setShowModal(true)}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md"
-                  >
-                    Create Pomodoro Timer
-                  </button>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                </div>
+              ) : (
+                <Button onClick={() => setShowModal(true)}>
+                  Create Pomodoro Timer
+                </Button>
+              )}
+            </CardContent>
+          </Card>
         </div>
+
         <Calendar
           mode="single"
           selected={date}
           onSelect={setDate}
-          className="rounded-md border w-fit"
+          className="rounded-md border w-fit mt-4"
         />
       </div>
 
