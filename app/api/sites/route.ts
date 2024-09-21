@@ -13,17 +13,11 @@ export async function GET(request: Request) {
     if (!user) {
       return NextResponse.redirect('/api/auth/login');
     }
-
     const count = await prisma.site.count({
       where: {
         userId: (await user).id,
-        name: {
-          contains: search, // Filter based on search term
-          mode: 'insensitive', // Case insensitive search
-        },
       },
     });
-
     const sites = await prisma.site.findMany({
       where: {
         userId: (await user).id,
@@ -37,7 +31,7 @@ export async function GET(request: Request) {
       },
     });
 
-    return NextResponse.json(sites);
+    return NextResponse.json({ sites, count });
   } catch (error) {
     console.error('Error fetching sites:', error); // Log the error to the server console
     return NextResponse.json(

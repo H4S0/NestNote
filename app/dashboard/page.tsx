@@ -14,15 +14,22 @@ const DashboradIndexPage = () => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null); // Time left on the timer
   const [isRunning, setIsRunning] = useState<boolean>(false); // To track if the timer is running
   const [isPaused, setIsPaused] = useState<boolean>(false); // To track if the timer is paused
+  const [count, setCount] = useState([]);
 
-
-  useEffect(()=>{
+  useEffect(() => {
     const fetchCount = async () => {
-      try{
-        const response  = await fetch('')
+      try {
+        const response = await fetch('/api/sites');
+        const data = await response.json();
+        const { count } = data;
+        setCount(count);
+        console.log(data);
+      } catch (error) {
+        console.log(error);
       }
-    }
-  })
+    };
+    fetchCount();
+  }, []);
   // Handle play button click
   const handlePlay = () => {
     if (pomodoroTime > 0) {
@@ -112,7 +119,9 @@ const DashboradIndexPage = () => {
           {/* First card */}
           <Card className="h-full">
             <CardHeader>Total Notebooks</CardHeader>
-            <CardContent>notebooks_number</CardContent>
+            <CardContent>
+              Number of total notebooks that your created: {count}
+            </CardContent>
           </Card>
 
           {/* Second card */}
