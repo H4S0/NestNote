@@ -2,12 +2,54 @@
 
 import React, { useEffect, useState } from 'react';
 import { Calendar } from '@/components/ui/calendar';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import Modal from '../components/dashboard/pomodoroTimerModal';
 import { Button } from '@/components/ui/button';
 import { off } from 'process';
 import Loading from '../components/loading';
+import { TrendingUp } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
+const chartData = {
+  series: [
+    {
+      name: 'Mobile',
+      data: [30, 40, 35, 50, 49, 60],
+    },
+    {
+      name: 'Desktop',
+      data: [20, 30, 25, 40, 39, 50],
+    },
+  ],
+  options: {
+    chart: {
+      type: 'area',
+      stacked: true,
+    },
+    xaxis: {
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    },
+    fill: {
+      opacity: 0.4,
+    },
+    stroke: {
+      curve: 'smooth',
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+    },
+  },
+};
 const DashboradIndexPage = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -110,74 +152,106 @@ const DashboradIndexPage = () => {
   };
 
   return (
-    <>
-      <div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-          <Card className="h-full">
-            <CardHeader>Total Notebooks</CardHeader>
-            <CardContent>
-              Number of total notebooks that your created:{' '}
-              {loading ? 'loading..' : count}{' '}
-            </CardContent>
-          </Card>
+    <div className="w-full h-full overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        <Card className="h-full">
+          <CardHeader>Total Notebooks</CardHeader>
+          <CardContent>
+            Number of total notebooks that your created:{' '}
+            {loading ? 'loading...' : count}{' '}
+            {/*dodati samo loading text ne animaciju */}
+          </CardContent>
+        </Card>
 
-          <Card className="h-full">
-            <CardHeader>Total Notebooks</CardHeader>
-            <CardContent>notebooks_number</CardContent>
-          </Card>
+        <Card className="h-full">
+          <CardHeader>Create new notebook</CardHeader>
+          <CardContent>
+            <Link href="/dashboard/sites/new">
+              <Button>Create notebook</Button>
+            </Link>
+          </CardContent>
+        </Card>
 
-          <Card className="h-full">
-            <CardHeader>Total Notebooks</CardHeader>
-            <CardContent>notebooks_number</CardContent>
-          </Card>
+        <Card className="h-full">
+          <CardHeader>Total Notebooks</CardHeader>
+          <CardContent>notebooks_number</CardContent>
+        </Card>
 
-          <Card className="h-full border rounded-lg shadow-lg p-4">
-            <CardHeader className="text-lg font-bold mb-2">
-              Pomodoro Timer
-            </CardHeader>
-            <CardContent>
-              {timeLeft !== null ? (
-                <div className="text-center">
-                  <p className="text-2xl font-semibold mb-4">{`Time Left: ${formatTime(timeLeft)}`}</p>
-                  <div className="flex justify-center space-x-4">
-                    {isPaused ? (
-                      <Button
-                        onClick={handleResume}
-                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
-                      >
-                        Play
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={handlePause}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md"
-                      >
-                        Pause
-                      </Button>
-                    )}
+        <Card className="h-full border rounded-lg shadow-lg p-4">
+          <CardHeader className="text-lg font-bold mb-2">
+            Pomodoro Timer
+          </CardHeader>
+          <CardContent>
+            {timeLeft !== null ? (
+              <div className="text-center">
+                <p className="text-2xl font-semibold mb-4">{`Time Left: ${formatTime(timeLeft)}`}</p>
+                <div className="flex justify-center space-x-4">
+                  {isPaused ? (
                     <Button
-                      onClick={handleCancel}
-                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
+                      onClick={handleResume}
+                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
                     >
-                      Cancel
+                      Play
                     </Button>
-                  </div>
+                  ) : (
+                    <Button
+                      onClick={handlePause}
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md"
+                    >
+                      Pause
+                    </Button>
+                  )}
+                  <Button
+                    onClick={handleCancel}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
+                  >
+                    Cancel
+                  </Button>
                 </div>
-              ) : (
-                <Button onClick={() => setShowModal(true)}>
-                  Create Pomodoro Timer
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-        </div>
+              </div>
+            ) : (
+              <Button onClick={() => setShowModal(true)}>
+                Create Pomodoro Timer
+              </Button>
+            )}
+          </CardContent>
+        </Card>
       </div>
-      <Calendar
-        mode="single"
-        selected={date}
-        onSelect={setDate}
-        className="rounded-md border w-fit mt-4"
-      />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mt-4">
+        {/* Calendar */}
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle>Calendar</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              className="rounded-md border w-full"
+            />
+          </CardContent>
+        </Card>
+
+        {/* Chart */}
+        <Card className="w-full">
+          <CardHeader>
+            <CardTitle>Area Chart - Stacked</CardTitle>
+            <CardDescription>
+              Showing total visitors for the last 6 months
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Chart
+              options={chartData.options}
+              series={chartData.series}
+              type="area"
+              height={350}
+            />
+          </CardContent>
+        </Card>
+      </div>
 
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
@@ -214,7 +288,7 @@ const DashboradIndexPage = () => {
           </div>
         </Modal>
       )}
-    </>
+    </div>
   );
 };
 
