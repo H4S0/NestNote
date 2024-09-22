@@ -117,8 +117,7 @@ const DashboradIndexPage = () => {
             <CardHeader>Total Notebooks</CardHeader>
             <CardContent>
               Number of total notebooks that your created:{' '}
-              {loading ? <Loading /> : count}{' '}
-              {/*dodati samo loading text ne animaciju */}
+              {loading ? 'loading..' : count}{' '}
             </CardContent>
           </Card>
 
