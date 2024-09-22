@@ -11,11 +11,11 @@ import Loading from '../components/loading';
 const DashboradIndexPage = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [pomodoroTime, setPomodoroTime] = useState<number>(25); // Default 25 minutes
-  const [breakTime, setBreakTime] = useState<number>(5); // Default 5 minutes
-  const [timeLeft, setTimeLeft] = useState<number | null>(null); // Time left on the timer
-  const [isRunning, setIsRunning] = useState<boolean>(false); // To track if the timer is running
-  const [isPaused, setIsPaused] = useState<boolean>(false); // To track if the timer is paused
+  const [pomodoroTime, setPomodoroTime] = useState<number>(25);
+  const [breakTime, setBreakTime] = useState<number>(5);
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
   const [count, setCount] = useState([]);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -36,83 +36,74 @@ const DashboradIndexPage = () => {
     fetchCount();
   }, []);
 
-  // Handle play button click
   const handlePlay = () => {
     if (pomodoroTime > 0) {
-      setTimeLeft(pomodoroTime * 60); // Set the time for the timer (convert minutes to seconds)
+      setTimeLeft(pomodoroTime * 60);
       setIsRunning(true);
       setIsPaused(false);
-      setShowModal(false); // Close the modal
+      setShowModal(false);
     } else {
       alert('Pomodoro time must be greater than 0');
     }
   };
 
-  // Handle resume button click after pause
   const handleResume = () => {
     setIsRunning(true);
     setIsPaused(false);
   };
 
-  // Handle pause button click
   const handlePause = () => {
     setIsRunning(false);
-    setIsPaused(true); // Mark as paused
+    setIsPaused(true);
   };
 
-  // Handle cancel button click
   const handleCancel = () => {
-    setTimeLeft(null); // Reset the timer
+    setTimeLeft(null);
     setIsRunning(false);
     setIsPaused(false);
   };
 
-  // Timer logic to count down
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
 
     if (isRunning && timeLeft !== null && timeLeft > 0) {
-      // If the timer is running and there is time left, start the countdown
       timer = setInterval(() => {
         setTimeLeft((prevTime) => {
-          // Ensure the timer never goes below 0
           if (prevTime !== null && prevTime > 0) {
             return prevTime - 1;
           } else {
-            return 0; // Prevent negative time
+            return 0;
           }
         });
       }, 1000);
     } else if (timeLeft === 0) {
-      clearInterval(timer as unknown as NodeJS.Timeout); // Stop the timer if it reaches 0
-      setIsRunning(false); // Mark the timer as not running
+      clearInterval(timer as unknown as NodeJS.Timeout);
+      setIsRunning(false);
       alert('Pomodoro complete! Take a break.');
     }
 
-    return () => clearInterval(timer as NodeJS.Timeout); // Cleanup the interval on component unmount
+    return () => clearInterval(timer as NodeJS.Timeout);
   }, [isRunning, timeLeft]);
 
-  // Function to format time as mm:ss
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
-  // Function to handle time input change
   const handlePomodoroTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value); // Convert input to number
+    const value = Number(e.target.value);
     if (value >= 0) {
-      setPomodoroTime(value); // Only set positive values
+      setPomodoroTime(value);
     } else {
       alert('Pomodoro time cannot be negative');
     }
   };
 
   const handleBreakTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value); // Convert input to number
+    const value = Number(e.target.value);
     if (value >= 0) {
-      setBreakTime(value); // Only set positive values
+      setBreakTime(value);
     } else {
       alert('Break time cannot be negative');
     }
@@ -122,7 +113,6 @@ const DashboradIndexPage = () => {
     <>
       <div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-          {/* First card */}
           <Card className="h-full">
             <CardHeader>Total Notebooks</CardHeader>
             <CardContent>
@@ -132,19 +122,16 @@ const DashboradIndexPage = () => {
             </CardContent>
           </Card>
 
-          {/* Second card */}
           <Card className="h-full">
             <CardHeader>Total Notebooks</CardHeader>
             <CardContent>notebooks_number</CardContent>
           </Card>
 
-          {/* Third card */}
           <Card className="h-full">
             <CardHeader>Total Notebooks</CardHeader>
             <CardContent>notebooks_number</CardContent>
           </Card>
 
-          {/* Fourth card (Pomodoro Timer) */}
           <Card className="h-full border rounded-lg shadow-lg p-4">
             <CardHeader className="text-lg font-bold mb-2">
               Pomodoro Timer

@@ -5,7 +5,7 @@ import { requireUser } from '@/app/utils/requireUser';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const search = url.searchParams.get('search') || ''; // Extract search parameter
+  const search = url.searchParams.get('search') || '';
 
   try {
     const user = requireUser();
@@ -13,17 +13,19 @@ export async function GET(request: Request) {
     if (!user) {
       return NextResponse.redirect('/api/auth/login');
     }
+
     const count = await prisma.site.count({
       where: {
         userId: (await user).id,
       },
     });
+
     const sites = await prisma.site.findMany({
       where: {
         userId: (await user).id,
         name: {
-          contains: search, // Filter based on search term
-          mode: 'insensitive', // Case insensitive search
+          contains: search,
+          mode: 'insensitive',
         },
       },
       orderBy: {
