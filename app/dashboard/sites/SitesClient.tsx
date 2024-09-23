@@ -43,9 +43,9 @@ const SitesClient = () => {
       if (!res.ok) {
         throw new Error('Failed to fetch sites');
       }
-      const sites = await res.json();
-      console.log('Fetched data:', sites); // Add this line to debug
-      setData(sites || []); // Ensure sites is an array or fallback to an empty array
+      const { sites } = await res.json();
+      setData(sites || []);
+      console.log(sites);
     } catch (error) {
       console.error(error);
       setData([]);
@@ -55,10 +55,9 @@ const SitesClient = () => {
   };
 
   useEffect(() => {
-    fetchData(); // Fetch data whenever searchTerm changes
+    fetchData();
   }, [searchTerm]);
 
-  // Filter data based on searchTerm
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );

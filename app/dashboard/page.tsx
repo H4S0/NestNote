@@ -58,7 +58,6 @@ const DashboradIndexPage = () => {
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [isPaused, setIsPaused] = useState<boolean>(false);
-  const [count, setCount] = useState([]);
   const [data, setData] = useState<[]>([]);
 
   const [loading, setLoading] = useState(false);
@@ -68,12 +67,9 @@ const DashboradIndexPage = () => {
       setLoading(true);
 
       try {
-        // Fetch only the count by passing ?countOnly=true
-        const response = await fetch('/api/sites?countOnly=true');
-        const data = await response.json();
-
-        // Set the count from the API response
-        setCount(data.count);
+        const response = await fetch('/api/sitecount');
+        const count = await response.json();
+        setData(count);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching count:', error);
@@ -157,6 +153,8 @@ const DashboradIndexPage = () => {
     }
   };
 
+  const { count }: any = data;
+
   return (
     <div className="w-full h-full overflow-hidden">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
@@ -165,7 +163,6 @@ const DashboradIndexPage = () => {
           <CardContent>
             Number of total notebooks that your created:{' '}
             {loading ? 'loading...' : count}{' '}
-            {/*dodati samo loading text ne animaciju */}
           </CardContent>
         </Card>
 

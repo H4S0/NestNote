@@ -3,9 +3,6 @@ import { requireUser } from '@/app/utils/requireUser';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const search = url.searchParams.get('search') || '';
-
   try {
     const user = requireUser();
 
@@ -13,22 +10,14 @@ export async function GET(request: Request) {
       return NextResponse.redirect('/api/auth/login');
     }
 
-    const sites = await prisma.site.findMany({
+    const count = await prisma.site.count({
       where: {
         userId: (await user).id,
-        name: {
-          contains: search,
-          mode: 'insensitive',
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
       },
     });
 
-    return NextResponse.json({ sites });
-
-    console.log(sites);
+    return NextResponse.json({ count });
+    console.log(count);
   } catch (error) {
     console.error('Error fetching sites or count:', error);
     return NextResponse.json(
