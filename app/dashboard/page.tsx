@@ -50,14 +50,25 @@ const chartData = {
     },
   },
 };
+
+interface PomodoroState {
+  pomodoroTime: number;
+  breakTime: number;
+  timeLeft: number | null;
+  isRunning: boolean;
+  isPaused: boolean;
+}
+
 const DashboradIndexPage = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [pomodoroTime, setPomodoroTime] = useState<number>(25);
-  const [breakTime, setBreakTime] = useState<number>(5);
-  const [timeLeft, setTimeLeft] = useState<number | null>(null);
-  const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [pomodoroState, setPomodoroState] = useState<PomodoroState>({
+    pomodoroTime: 25,
+    breakTime: 5,
+    timeLeft: null,
+    isRunning: false,
+    isPaused: false,
+  });
   const [data, setData] = useState<[]>([]);
 
   const [loading, setLoading] = useState(false);
@@ -81,10 +92,13 @@ const DashboradIndexPage = () => {
   }, []);
 
   const handlePlay = () => {
-    if (pomodoroTime > 0) {
-      setTimeLeft(pomodoroTime * 60);
-      setIsRunning(true);
-      setIsPaused(false);
+    if (pomodoroState.pomodoroTime > 0) {
+      setPomodoroState((prevState) => ({
+        ...prevState,
+        timeLeft: pomodoroState.pomodoroTime * 60,
+        isRunning: true,
+        isPaused: false,
+      }));
       setShowModal(false);
     } else {
       alert('Pomodoro time must be greater than 0');
@@ -92,42 +106,61 @@ const DashboradIndexPage = () => {
   };
 
   const handleResume = () => {
-    setIsRunning(true);
-    setIsPaused(false);
+    setPomodoroState((prevState) => ({
+      ...prevState,
+      isRunning: true,
+      isPaused: false,
+    }));
   };
 
   const handlePause = () => {
-    setIsRunning(false);
-    setIsPaused(true);
+    setPomodoroState((prevState) => ({
+      ...prevState,
+      isRunning: false,
+      isPaused: true,
+    }));
   };
 
   const handleCancel = () => {
-    setTimeLeft(null);
-    setIsRunning(false);
-    setIsPaused(false);
+    setPomodoroState((prevState) => ({
+      ...prevState,
+      timeLeft: null,
+      isRunning: false,
+      isPaused: false,
+    }));
   };
 
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
 
-    if (isRunning && timeLeft !== null && timeLeft > 0) {
+    if (
+      pomodoroState.isRunning &&
+      pomodoroState.timeLeft !== null &&
+      pomodoroState.timeLeft > 0
+    ) {
       timer = setInterval(() => {
-        setTimeLeft((prevTime) => {
-          if (prevTime !== null && prevTime > 0) {
-            return prevTime - 1;
+        setPomodoroState((prevState) => {
+          if (prevState.timeLeft !== null && prevState.timeLeft > 0) {
+            return {
+              ...prevState,
+              timeLeft: prevState.timeLeft - 1,
+            };
           } else {
-            return 0;
+            return prevState;
           }
         });
       }, 1000);
-    } else if (timeLeft === 0) {
+    } else if (pomodoroState.timeLeft === 0) {
       clearInterval(timer as unknown as NodeJS.Timeout);
-      setIsRunning(false);
+      setPomodoroState((prevState) => ({
+        ...prevState,
+        isRunning: false,
+      }));
       alert('Pomodoro complete! Take a break.');
     }
 
     return () => clearInterval(timer as NodeJS.Timeout);
-  }, [isRunning, timeLeft]);
+  }, [pomodoroState.isRunning, pomodoroState.timeLeft]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -138,7 +171,7 @@ const DashboradIndexPage = () => {
   const handlePomodoroTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     if (value >= 0) {
-      setPomodoroTime(value);
+      setPomodoroState((prevState) => ({ ...prevState, pomodoroTime: value }));
     } else {
       alert('Pomodoro time cannot be negative');
     }
@@ -147,13 +180,14 @@ const DashboradIndexPage = () => {
   const handleBreakTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     if (value >= 0) {
-      setBreakTime(value);
+      setPomodoroState((prevState) => ({ ...prevState, breakTime: value }));
     } else {
       alert('Break time cannot be negative');
     }
   };
 
-  const { count }: any = data;
+  const { count } = data;
+  console.log(data);
 
   return (
     <div className="w-full h-full overflow-hidden">
@@ -185,11 +219,11 @@ const DashboradIndexPage = () => {
             Pomodoro Timer
           </CardHeader>
           <CardContent>
-            {timeLeft !== null ? (
+            {pomodoroState.timeLeft !== null ? (
               <div className="text-center">
-                <p className="text-2xl font-semibold mb-4">{`Time Left: ${formatTime(timeLeft)}`}</p>
+                <p className="text-2xl font-semibold mb-4">{`Time Left: ${formatTime(pomodoroState.timeLeft)}`}</p>
                 <div className="flex justify-center space-x-4">
-                  {isPaused ? (
+                  {pomodoroState.isPaused ? (
                     <Button
                       onClick={handleResume}
                       className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
@@ -265,7 +299,7 @@ const DashboradIndexPage = () => {
                 Pomodoro Time (minutes):
                 <input
                   type="number"
-                  value={pomodoroTime}
+                  value={pomodoroState.pomodoroTime}
                   onChange={handlePomodoroTimeChange}
                   min="1"
                   className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
@@ -275,7 +309,7 @@ const DashboradIndexPage = () => {
                 Break Time (minutes):
                 <input
                   type="number"
-                  value={breakTime}
+                  value={pomodoroState.breakTime}
                   onChange={handleBreakTimeChange}
                   min="1"
                   className="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
