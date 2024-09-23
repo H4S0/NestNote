@@ -44,7 +44,8 @@ const SitesClient = () => {
         throw new Error('Failed to fetch sites');
       }
       const sites = await res.json();
-      setData(sites || []);
+      console.log('Fetched data:', sites); // Add this line to debug
+      setData(sites || []); // Ensure sites is an array or fallback to an empty array
     } catch (error) {
       console.error(error);
       setData([]);

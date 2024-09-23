@@ -59,22 +59,28 @@ const DashboradIndexPage = () => {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [count, setCount] = useState([]);
+  const [data, setData] = useState<[]>([]);
+
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const fetchCount = async () => {
       setLoading(true);
 
       try {
-        const response = await fetch('/api/sites');
+        // Fetch only the count by passing ?countOnly=true
+        const response = await fetch('/api/sites?countOnly=true');
         const data = await response.json();
-        const { count } = data;
-        setCount(count);
+
+        // Set the count from the API response
+        setCount(data.count);
         setLoading(false);
-        console.log(data);
       } catch (error) {
-        console.log(error);
+        console.error('Error fetching count:', error);
+        setLoading(false);
       }
     };
+
     fetchCount();
   }, []);
 
