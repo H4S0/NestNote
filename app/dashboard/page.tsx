@@ -214,10 +214,8 @@ const DashboradIndexPage = () => {
           <CardContent>notebooks_number</CardContent>
         </Card>
 
-        <Card className="h-full border rounded-lg shadow-lg p-4">
-          <CardHeader className="text-lg font-bold mb-2">
-            Pomodoro Timer
-          </CardHeader>
+        <Card className="h-full border rounded-lg shadow-lg">
+          <CardHeader className="text-lg  mb-2">Pomodoro Timer</CardHeader>
           <CardContent>
             {pomodoroState.timeLeft !== null ? (
               <div className="text-center">
@@ -255,19 +253,17 @@ const DashboradIndexPage = () => {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full mt-4">
+      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4 w-full mt-4">
         {/* Calendar */}
-        <Card className="w-full">
+        <Card>
           <CardHeader>
             <CardTitle>Calendar</CardTitle>
           </CardHeader>
-          <CardContent>
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              className="rounded-md border w-full"
-            />
+          <CardContent className="flex items-center justify-around">
+            <div>
+              <Calendar mode="single" selected={date} onSelect={setDate} />
+            </div>
+            <div>add like todo list</div>
           </CardContent>
         </Card>
 
