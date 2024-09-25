@@ -109,3 +109,17 @@ export async function DeleteNotebook(formData: FormData) {
   });
   return redirect('/dashboard/sites');
 }
+
+export async function DeleteNotes(formData: FormData) {
+  const user = await requireUser(); // Ensure you have the correct user
+
+  // Perform the delete operation
+  const data = await prisma.post.delete({
+    where: {
+      id: formData.get('articleId') as string, // Make sure this is cast to a string
+      userId: user.id, // Ensure the user is authorized to delete
+    },
+  });
+  const siteId = formData.get('siteId');
+  return redirect(`/dashboard/sites/${siteId}`);
+}

@@ -38,6 +38,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Loading from '@/app/components/loading';
 import EmptyNote from '@/app/components/dashboard/EmptyNote';
+import { DeleteNotes } from '@/app/actions';
 
 export default function SiteIdRoute({
   params,
@@ -188,7 +189,21 @@ export default function SiteIdRoute({
                                 Edit
                               </Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem>Delete</DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <form action={DeleteNotes} method="delete">
+                                <input
+                                  type="hidden"
+                                  name="articleId"
+                                  value={item.id}
+                                />
+                                <input
+                                  type="hidden"
+                                  name="siteId"
+                                  value={params.siteId}
+                                />
+                                <button type="submit">Delete</button>
+                              </form>
+                            </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
