@@ -52,6 +52,7 @@ export async function CreatePostAction(prevState: any, formData: FormData) {
       smallDescription: submission.value.smallDescripiton,
       slug: submission.value.slug,
       image: submission.value.coverImage,
+      status: submission.value.status,
       userId: (await user).id,
       siteId: formData.get('siteId') as string,
     },
@@ -81,6 +82,7 @@ export async function EditPostAction(prevState: any, formData: FormData) {
       smallDescription: submission.value.smallDescripiton,
       slug: submission.value.slug,
       image: submission.value.coverImage,
+      status: submission.value.status,
     },
   });
   return redirect(`/dashboard/sites/${formData.get('siteId')}`);

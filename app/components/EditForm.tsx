@@ -78,6 +78,7 @@ export function EditForm({ data, siteId }: iAppProps) {
           <div className="grid gap-2">
             <Select name="status">
               <SelectTrigger className="w-[180px]">
+                {/*TO DO staviti trenutni value kada se otvori edit forma */}
                 <SelectValue placeholder="Learning status" />
               </SelectTrigger>
               <SelectContent>
