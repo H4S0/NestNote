@@ -7,6 +7,7 @@ import { postSchema, siteSchema } from './utils/zodSchemas';
 import prisma from './utils/db';
 import { requireUser } from './utils/requireUser';
 import { subscribe } from 'diagnostics_channel';
+import { NextResponse } from 'next/server';
 
 export async function CreateSiteAction(prevState: any, formData: FormData) {
   const user = requireUser();
@@ -32,6 +33,10 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
 
 export async function CreatePostAction(prevState: any, formData: FormData) {
   const user = requireUser();
+
+  if (!user) {
+    return redirect('/api/auth/login');
+  }
 
   const submission = parseWithZod(formData, {
     schema: postSchema,
@@ -76,7 +81,6 @@ export async function EditPostAction(prevState: any, formData: FormData) {
       smallDescription: submission.value.smallDescripiton,
       slug: submission.value.slug,
       image: submission.value.coverImage,
-      status: submission.value.status,
     },
   });
   return redirect(`/dashboard/sites/${formData.get('siteId')}`);

@@ -17,6 +17,13 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
 import { ArrowLeft, Atom, AtomIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -30,6 +37,7 @@ export default function ArticleCreationRoute({
 }) {
   const [imageUrl, setImageUrl] = useState<undefined | string>(undefined);
   const [value, setValue] = useState<JSONContent | undefined>(undefined);
+
   const [lastResult, action] = useActionState(CreatePostAction, undefined);
   const [form, fields] = useForm({
     lastResult,
@@ -41,7 +49,7 @@ export default function ArticleCreationRoute({
     shouldValidate: 'onBlur',
     shouldRevalidate: 'onInput',
   });
-
+  const [status, setStatus] = useState(fields.status.initialValue);
   return (
     <>
       <div className="flex items-center">
@@ -68,6 +76,28 @@ export default function ArticleCreationRoute({
             action={action}
           >
             <input type="hidden" name="siteId" value={params.siteId} />
+            <div className="grid gap-2">
+              <Label>Status</Label>
+              <Select
+                name="status"
+                value={status}
+                onValueChange={(value) => {
+                  setStatus(value); // Update the local state
+                  fields.status.value = value; // Update the form field manually
+                }}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Learning status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="NOT_STARTED">Not started</SelectItem>
+                  <SelectItem value="LEARNING">Learning</SelectItem>
+                  <SelectItem value="FINISHED">Finished</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-red-500 text-sm">{fields.status.errors}</p>
+            </div>
+
             <div className="grid gap-2">
               <Label>Title</Label>
               <Input
