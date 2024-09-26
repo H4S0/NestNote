@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { FileIcon, PlusCircle, Search } from 'lucide-react';
+import { PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 import {
   Card,
@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/card';
 import Image from 'next/image';
 import DefaultImage from '@/public/default.png';
-import Loading from '@/app/components/loading';
 import { Input } from '@/components/ui/input';
 import EmptyNote from '@/app/components/dashboard/EmptyNote';
 
@@ -92,13 +91,11 @@ const SitesClient = () => {
           {filteredData.map((item) => (
             <Card key={item.id}>
               <Image
-                priority
                 src={item.imageUrl ?? DefaultImage}
                 alt={item.name}
-                width={400}
-                height={200}
                 className="rounded-t-lg object-cover w-full h-[200px]"
               />
+
               <CardHeader>
                 <CardTitle>{item.name}</CardTitle>
                 <CardDescription>{item.description}</CardDescription>
@@ -114,9 +111,9 @@ const SitesClient = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full">
-                  <Link href={`/dashboard/sites/${item.id}`}>View Notes</Link>
-                </Button>
+                <Link href={`/dashboard/sites/${item.id}`} prefetch={true}>
+                  <Button className="w-full">View Notes</Button>
+                </Link>
               </CardFooter>
             </Card>
           ))}
