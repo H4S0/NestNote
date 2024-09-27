@@ -94,7 +94,7 @@ export function EditForm({ data, siteId }: iAppProps) {
               id={fields.title.name}
               name={fields.title.name}
               defaultValue={fields.title.initialValue}
-              placeholder="Nextjs blogging application"
+              placeholder="Your notes name"
               onChange={(e) => setTitle(e.target.value)}
               value={title}
             />
@@ -111,9 +111,6 @@ export function EditForm({ data, siteId }: iAppProps) {
               onChange={(e) => setSlugValue(e.target.value)}
               value={slug}
             />
-            <Button className="w-fit" variant="secondary" type="button">
-              <Atom className="size-4 mr-2" /> Generate Slug
-            </Button>
             <p className="text-red-500 text-sm">{fields.slug.errors}</p>
           </div>
 
