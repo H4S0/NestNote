@@ -1,16 +1,10 @@
 'use client';
 
+import { CiMenuFries } from 'react-icons/ci';
 import Link from 'next/link';
 import { ReactNode, useEffect, useState } from 'react';
 import DashboardItems from '../components/dashboard/DashboardItems';
-import {
-  CircleUser,
-  DollarSign,
-  Globe,
-  HeartOff,
-  Home,
-  NotebookTabs,
-} from 'lucide-react';
+import { CircleUser, DollarSign, Home, NotebookTabs } from 'lucide-react';
 import { ThemeToggle } from '../components/dashboard/ThemeToggle';
 import {
   DropdownMenu,
@@ -22,7 +16,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 
 export const navLinks: { name: string; href: string; icon: any }[] = [
   {
@@ -43,17 +36,20 @@ export const navLinks: { name: string; href: string; icon: any }[] = [
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  // Function to toggle sidebar
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
+
   const [username, setUsername] = useState<string | null>(null);
   useEffect(() => {
     const fetchUsername = async () => {
       try {
         const response = await fetch('/api/auth/creation');
         const result = await response.json();
-        if (result.firstName) {
-          setUsername(result.firstName);
-        } else {
-          setUsername('Guest');
-        }
+        setUsername(result.firstName || 'Guest');
       } catch (error) {
         console.error('Error fetching username:', error);
         setUsername('Guest');
@@ -62,18 +58,32 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
     fetchUsername();
   }, []);
+
   return (
-    <section className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-      <div className="hidden border-r bg-muted/40 md:block">
+    <section className="grid min-h-screen w-full lg:grid-cols-[250px_1fr]">
+      {/* Menu button for small and medium screens */}
+      <button
+        className="lg:hidden fixed top-4 left-4 z-50"
+        onClick={toggleSidebar}
+      >
+        <CiMenuFries className="h-6 w-6" />
+      </button>
+
+      {/* Sidebar, hidden on medium and small screens, toggle-able */}
+      <div
+        className={`fixed inset-y-0 left-0 z-40 w-64 bg-muted border-r transition-transform duration-300 ease-in-out transform ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } lg:translate-x-0 lg:relative lg:block`}
+      >
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-            <Link href="/" className="flex item-center gap-2 font-semibold">
+            <Link href="/" className="flex items-center gap-2 font-semibold">
               <h3 className="text-2xl">
                 Nest<span className="text-primary">Note</span>
               </h3>
             </Link>
           </div>
-          <div className="flex-1">
+          <div className="flex-1 overflow-y-auto">
             <nav className="grid items-start px-2 font-medium lg:px-4">
               <DashboardItems />
             </nav>
@@ -81,8 +91,18 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      <div className="flex flex-col ">
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+      {/* Backdrop overlay for small and medium screens */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black opacity-50 lg:hidden"
+          onClick={toggleSidebar}
+        ></div>
+      )}
+
+      {/* Main content with top navbar */}
+      <div className="flex flex-col">
+        <header className="flex h-14 items-center gap-4 border-b bg-muted px-4 lg:h-[60px]">
+          {/* Push the navbar items to the right */}
           <div className="ml-auto flex items-center gap-x-5">
             <ThemeToggle />
 
@@ -106,6 +126,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </DropdownMenu>
           </div>
         </header>
+
+        {/* Main content */}
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           {children}
         </main>
