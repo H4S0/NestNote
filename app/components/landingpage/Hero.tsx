@@ -8,9 +8,11 @@ const Hero = () => {
   return (
     <>
       <Navbar />
-      <div className="relative flex flex-col items-center justify-center min-h-screen   text-center px-4 md:px-8 overflow-hidden">
+      <div className="relative flex flex-col items-center justify-center min-h-screen text-center px-4 md:px-8 overflow-hidden">
+        {/* Background Pattern */}
         <div className="absolute inset-0 bg-[url('/assets/paper-pattern.svg')] opacity-20"></div>
 
+        {/* Hero Content */}
         <div className="relative z-10 max-w-4xl">
           <h1 className="text-5xl font-bold mb-4 md:text-6xl">
             <span className="typing-animation-line1 block">
@@ -42,46 +44,22 @@ const Hero = () => {
           0% {
             width: 0;
           }
-          50% {
-            width: 100%;
-          }
           100% {
-            width: 0;
+            width: 100%;
           }
         }
 
         .typing-animation-line1,
         .typing-animation-line2 {
-          border-right: 2px solid #fff;
           white-space: nowrap;
           overflow: hidden;
           display: inline-block;
           width: 0;
-        }
-
-        .typing-animation-line1 {
-          animation: typing 6s steps(30, end) infinite;
-          animation-delay: 0s;
+          animation: typing 3s steps(30, end) forwards;
         }
 
         .typing-animation-line2 {
-          animation: typing 6s steps(30, end) infinite;
           animation-delay: 3s;
-        }
-
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-fade-in {
-          animation: fade-in 2s ease-in-out;
         }
       `}</style>
     </>
