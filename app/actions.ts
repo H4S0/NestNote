@@ -105,25 +105,27 @@ export async function UpdateImage(formData: FormData) {
 }
 
 export async function DeleteNotebook(formData: FormData) {
-  const user = requireUser();
+  const user = await requireUser();
+  const notebookId = formData.get('siteId') as string;
 
-  const data = await prisma.site.delete({
+  // Delete the notebook, automatically deleting all related posts due to cascading delete
+  await prisma.site.delete({
     where: {
-      userId: (await user).id,
-      id: formData.get('siteId') as string,
+      id: notebookId,
+      userId: user.id,
     },
   });
+
   return redirect('/dashboard/sites');
 }
 
 export async function DeleteNotes(formData: FormData) {
-  const user = await requireUser(); // Ensure you have the correct user
+  const user = await requireUser();
 
-  // Perform the delete operation
   const data = await prisma.post.delete({
     where: {
-      id: formData.get('articleId') as string, // Make sure this is cast to a string
-      userId: user.id, // Ensure the user is authorized to delete
+      id: formData.get('articleId') as string,
+      userId: user.id,
     },
   });
   const siteId = formData.get('siteId');
