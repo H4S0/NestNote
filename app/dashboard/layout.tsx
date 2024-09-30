@@ -52,8 +52,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       </button>
 
       <div
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-muted border-r transition-transform duration-300 ease-in-out transform ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed inset-y-0  left-0 z-40 w-64 bg-muted border-r transition-transform duration-300 ease-in-out transform ${
+          isSidebarOpen ? 'translate-x-0 px-9' : '-translate-x-full'
         } lg:translate-x-0 lg:relative lg:block`}
       >
         <div className="flex h-full max-h-screen flex-col gap-2">
@@ -79,7 +79,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         ></div>
       )}
 
-      <div className="flex flex-col">
+      <div
+        className={`flex flex-col transition-all duration-300 ease-in-out ${isSidebarOpen ? 'lg:ml-64' : ''}`}
+      >
         <header className="flex h-14 items-center gap-4 border-b bg-muted px-4 lg:h-[60px]">
           <div className="ml-auto flex items-center gap-x-5">
             <ThemeToggle />
