@@ -43,22 +43,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     setSidebarOpen(!isSidebarOpen);
   };
 
-  const [username, setUsername] = useState<string | null>(null);
-  useEffect(() => {
-    const fetchUsername = async () => {
-      try {
-        const response = await fetch('/api/auth/creation');
-        const result = await response.json();
-        setUsername(result.firstName || 'Guest');
-      } catch (error) {
-        console.error('Error fetching username:', error);
-        setUsername('Guest');
-      }
-    };
-
-    fetchUsername();
-  }, []);
-
   return (
     <section className="grid min-h-screen w-full lg:grid-cols-[250px_1fr]">
       {/* Menu button for small and medium screens */}
@@ -117,8 +101,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{username}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <LogoutLink>Logout</LogoutLink>
                 </DropdownMenuItem>

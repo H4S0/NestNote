@@ -1,42 +1,33 @@
 import prisma from '@/app/utils/db';
-import { requireUser } from '@/app/utils/requireUser';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const user = requireUser();
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
 
-  if (!user || !(await user).id) {
-    return NextResponse.json(
-      { error: 'User not authenticated' },
-      { status: 401 }
-    );
+  if (!user || user === null || !user.id) {
+    throw new Error('Something went wrong');
   }
 
   let dbUser = await prisma.user.findUnique({
     where: {
-      id: (await user).id,
-    },
-    select: {
-      firstName: true,
+      id: user.id,
     },
   });
 
-  // If the user doesn't exist in the database, create a new one
   if (!dbUser) {
     dbUser = await prisma.user.create({
       data: {
-        id: (await user).id,
-        firstName: (await user).given_name ?? '',
-        lastName: (await user).family_name ?? '',
-        email: (await user).email ?? '',
+        id: user.id,
+        firstName: user.given_name ?? '',
+        lastName: user.family_name ?? '',
+        email: user.email ?? '',
         profileImage:
-          (await user).picture ??
-          `https://avatar.vercel.sh/${(await user).given_name}`,
+          user.picture ?? `https://avatar.vercel.sh/${user.given_name}`,
       },
     });
   }
 
-  // Return the user's first name as a JSON response
-  return NextResponse.json({ firstName: dbUser.firstName });
+  return NextResponse.redirect('http://localhost:3000/dashboard');
 }
