@@ -10,10 +10,8 @@ const Hero = () => {
     <>
       <Navbar />
       <div className="relative flex flex-col items-center justify-center min-h-screen text-center px-4 md:px-8 overflow-hidden">
-        {/* Background Pattern */}
         <div className="absolute inset-0 bg-[url('/assets/paper-pattern.svg')] opacity-20"></div>
 
-        {/* Hero Content */}
         <div className="relative z-10 max-w-4xl">
           <h1 className="text-5xl font-bold mb-4 md:text-6xl">
             <span className="typing-animation-line1 block">
@@ -42,7 +40,6 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Tailwind Styles for Animations */}
       <style jsx>{`
         @keyframes typing {
           0% {

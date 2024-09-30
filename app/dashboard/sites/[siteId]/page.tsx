@@ -39,6 +39,7 @@ import {
 import Loading from '@/app/components/loading';
 import EmptyNote from '@/app/components/dashboard/EmptyNote';
 import { DeleteNotes } from '@/app/actions';
+import React from 'react';
 
 export default function SiteIdRoute({
   params,

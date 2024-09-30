@@ -47,7 +47,7 @@ export function EditForm({ data, siteId }: iAppProps) {
 
   const [slug, setSlugValue] = useState<string | undefined>(data.slug);
   const [title, setTitle] = useState<string | undefined>(data.title);
-
+  const [status, setStatus] = useState<string | undefined>(data.status);
   const [lastResult, action] = useActionState(EditPostAction, undefined);
   const [form, fields] = useForm({
     lastResult,
@@ -78,8 +78,12 @@ export function EditForm({ data, siteId }: iAppProps) {
           <div className="grid gap-2">
             <Select name="status">
               <SelectTrigger className="w-[180px]">
-                {/*TO DO staviti trenutni value kada se otvori edit forma */}
-                <SelectValue placeholder="Learning status" />
+                <SelectValue
+                  placeholder={
+                    status?.charAt(0).toUpperCase() +
+                    status?.slice(1).toLowerCase()
+                  }
+                />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="NOT_STARTED">Not started</SelectItem>

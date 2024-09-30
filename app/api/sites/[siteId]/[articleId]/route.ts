@@ -16,6 +16,7 @@ export async function GET(
       smallDescription: true,
       slug: true,
       id: true,
+      status: true,
     },
   });
 

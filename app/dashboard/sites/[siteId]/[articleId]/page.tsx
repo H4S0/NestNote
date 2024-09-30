@@ -25,7 +25,7 @@ export default function EditArticle({
           throw new Error('Failed to fetch data');
         }
         const result = await response.json();
-        console.log('Fetched article data:', result); // Check the entire data structure
+        console.log('Fetched article data:', result);
         setData(result);
       } catch (error) {
         console.error(error);

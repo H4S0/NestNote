@@ -38,14 +38,12 @@ export const navLinks: { name: string; href: string; icon: any }[] = [
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-  // Function to toggle sidebar
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
   return (
     <section className="grid min-h-screen w-full lg:grid-cols-[250px_1fr]">
-      {/* Menu button for small and medium screens */}
       <button
         className="lg:hidden fixed top-4 left-4 z-50"
         onClick={toggleSidebar}
@@ -53,7 +51,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <CiMenuFries className="h-6 w-6" />
       </button>
 
-      {/* Sidebar, hidden on medium and small screens, toggle-able */}
       <div
         className={`fixed inset-y-0 left-0 z-40 w-64 bg-muted border-r transition-transform duration-300 ease-in-out transform ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -75,7 +72,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      {/* Backdrop overlay for small and medium screens */}
       {isSidebarOpen && (
         <div
           className="fixed inset-0 z-30 bg-black opacity-50 lg:hidden"
@@ -83,10 +79,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         ></div>
       )}
 
-      {/* Main content with top navbar */}
       <div className="flex flex-col">
         <header className="flex h-14 items-center gap-4 border-b bg-muted px-4 lg:h-[60px]">
-          {/* Push the navbar items to the right */}
           <div className="ml-auto flex items-center gap-x-5">
             <ThemeToggle />
 
@@ -109,7 +103,6 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </div>
         </header>
 
-        {/* Main content */}
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
           {children}
         </main>
