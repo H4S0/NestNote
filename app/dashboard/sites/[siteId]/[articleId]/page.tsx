@@ -5,6 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { EditForm } from '@/app/components/EditForm';
 import Loading from '@/app/components/loading';
+import React from 'react';
 
 export default function EditArticle({
   params,

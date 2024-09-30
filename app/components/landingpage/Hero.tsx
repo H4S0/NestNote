@@ -3,6 +3,7 @@
 import React from 'react';
 import Navbar from './Navbar';
 import { Button } from '@/components/ui/button';
+import { LoginLink } from '@kinde-oss/kinde-auth-nextjs/components';
 
 const Hero = () => {
   return (
@@ -31,9 +32,12 @@ const Hero = () => {
             <Button className="bg-slate-200 text-indigo-700 font-semibold px-6 py-3 rounded-full hover:bg-gray-100 transition ease-in-out">
               See how it works
             </Button>
-            <Button className="bg-indigo-600 font-semibold px-6 py-3 rounded-full hover:bg-indigo-800 transition ease-in-out">
-              Try it
-            </Button>
+
+            <LoginLink>
+              <Button className="bg-indigo-600 font-semibold px-6 py-3 rounded-full hover:bg-indigo-800 transition ease-in-out">
+                Try it
+              </Button>
+            </LoginLink>
           </div>
         </div>
       </div>
