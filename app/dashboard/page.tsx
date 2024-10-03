@@ -260,10 +260,7 @@ const DashboradIndexPage = () => {
             <CardTitle>Calendar</CardTitle>
           </CardHeader>
           <CardContent className="flex items-center justify-around">
-            <div>
-              <Calendar mode="single" selected={date} onSelect={setDate} />
-            </div>
-            <div>add like todo list</div>
+            <Calendar mode="single" selected={date} onSelect={setDate} />
           </CardContent>
         </Card>
 

@@ -28,11 +28,7 @@ export const navLinks: { name: string; href: string; icon: any }[] = [
     href: '/dashboard/sites',
     icon: NotebookTabs,
   },
-  {
-    name: 'Pricing',
-    href: '/dashboard/pricing',
-    icon: DollarSign,
-  },
+
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
@@ -45,7 +41,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <section className="grid min-h-screen w-full lg:grid-cols-[250px_1fr]">
       <button
-        className="lg:hidden fixed top-4 left-4 z-50"
+        className="lg:hidden absolute top-4 left-4 z-50"
         onClick={toggleSidebar}
       >
         <CiMenuFries className="h-6 w-6" />
@@ -53,7 +49,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
       <div
         className={`fixed inset-y-0  left-0 z-40 w-64 bg-muted border-r transition-transform duration-300 ease-in-out transform ${
-          isSidebarOpen ? 'translate-x-0 px-9' : '-translate-x-full'
+          isSidebarOpen ? 'translate-x-0 px-9 ' : '-translate-x-full'
         } lg:translate-x-0 lg:relative lg:block`}
       >
         <div className="flex h-full max-h-screen flex-col gap-2">
