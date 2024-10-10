@@ -108,7 +108,7 @@ export async function DeleteNotebook(formData: FormData) {
   const user = await requireUser();
   const notebookId = formData.get('siteId') as string;
 
-  // Delete the notebook, automatically deleting all related posts due to cascading delete
+  
   await prisma.site.delete({
     where: {
       id: notebookId,
