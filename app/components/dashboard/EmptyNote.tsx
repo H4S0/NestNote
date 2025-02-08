@@ -3,7 +3,7 @@ import { FileIcon, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
-const EmptyNote = () => {
+const EmptyNote = ({ id }) => {
   return (
     <div className="flex flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
       <div className="flex size-20 items-center justify-center rounded-full bg-primary/30">
@@ -17,8 +17,8 @@ const EmptyNote = () => {
         see them right here!
       </p>
       <Button asChild>
-        <Link href={'/dashboard/sites/new'}>
-          <PlusCircle className="mr-4 size-4" /> Create Note
+        <Link href={`/dashboard/sites/${id}/create`}>
+          <PlusCircle className="mr-4 size-4" /> Create Notes
         </Link>
       </Button>
     </div>
