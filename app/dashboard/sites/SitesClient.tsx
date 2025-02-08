@@ -91,6 +91,8 @@ const SitesClient = () => {
           {filteredData.map((item) => (
             <Card key={item.id}>
               <Image
+                width={354}
+                height={354}
                 src={item.imageUrl ?? DefaultImage}
                 alt={item.name}
                 className="rounded-t-lg object-cover w-full h-[200px]"
