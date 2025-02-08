@@ -106,7 +106,7 @@ export default function SiteIdRoute({
       </div>
 
       {data.length === 0 ? (
-        <EmptyNote />
+        <EmptyNote id={params.siteId} />
       ) : (
         <div>
           <Card>
