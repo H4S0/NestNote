@@ -1,5 +1,5 @@
 'use server';
-
+//TO-DO PREBACITI U API
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
 import { parseWithZod } from '@conform-to/zod';
@@ -108,7 +108,7 @@ export async function DeleteNotebook(formData: FormData) {
   const user = await requireUser();
   const notebookId = formData.get('siteId') as string;
 
-  
+  // Delete the notebook, automatically deleting all related posts due to cascading delete
   await prisma.site.delete({
     where: {
       id: notebookId,
@@ -129,5 +129,5 @@ export async function DeleteNotes(formData: FormData) {
     },
   });
   const siteId = formData.get('siteId');
-  return redirect(`/dashboard/sites/${siteId}`);
+  return redirect(`/dashboard/sites`);
 }
